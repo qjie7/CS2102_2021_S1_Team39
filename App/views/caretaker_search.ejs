@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Page Title -->
+    <title>CS2102</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!-- CSS for Styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+    <!-- JavaScript for Interactivity -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <a href="/logout">Logout</a>
+      <a href="/pet_owner_home">Back to home</a>
+
+    <h3>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h3>
+    <form action="/caretaker_search" method="POST">
+      <div>
+      <select name="select_name" id="select_name" onchange="check()" >
+
+          <% for(var i=0; i<all_pet.length; i++) { %>
+              <option data-category="<%= all_pet[i].category_name%>" data-requirements="<%= all_pet[i].special_requirements%>" value="<%= all_pet[i].pet_name%>"> <%= all_pet[i].pet_name%></option>
+          <% } %>
+      </select>
+    </div>
+    <div>
+      <input type="text" name="select_category" id="select_category" required readonly/></div>
+      <div>
+      <input type="text" name="select_requirements" id="select_requirements" required readonly/></div>
+        <div>
+            <span>Start date</span>
+            <input type="date" id="start_date" name="start_date" required>
+            <input type="date" id="end_date" name="end_date" required>
+        </div>
+        <div>
+            <input type="submit" value="Search" />
+        </div>
+    </form>
+	
+</body>
+
+</html>
+<script>
+  document.getElementById("select_category").value = '<%= all_pet[0].category_name%>';
+  document.getElementById("select_requirements").value = '<%= all_pet[0].special_requirements%>';
+function check() {
+    var pet = document.getElementById("select_name");
+    var selectedOption = pet.options[pet.selectedIndex];
+    var categoryValue = selectedOption.getAttribute("data-category");
+    var requirementsValue = selectedOption.getAttribute("data-requirements");
+
+    document.getElementById("select_category").value = categoryValue;
+    document.getElementById("select_requirements").value = requirementsValue;
+}
+</script>

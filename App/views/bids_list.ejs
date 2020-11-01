@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Page Title -->
+    <title>CS2102</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!-- CSS for Styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+    <!-- JavaScript for Interactivity -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <a href="/logout">Logout</a>
+      <a href="/pet_owner_home">Back to home</a>
+
+	<p>My pending bids.</p>
+    <table class="table">
+        <thead>
+            <tr>
+				<th scope="col">Caretaker Name</th>
+                <th scope="col">Pet Name</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i<data.length; i++) { %>
+            <tr>
+                <td><%= data[i].name%></td>
+                <td><%= data[i].pet_name%></td>
+                <td><%= data[i].startdate%></td>
+                <td><%= data[i].enddate%></td>
+                <td><%= data[i].amount%></td>
+				<% if (data[i].status == 1) { %>
+					<td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-amount="<%= data[i].amount%>">Enter Transaction Details</button></td>									
+				<% } %>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+	
+	</br>
+	<p>My confirmed transactions.</p>
+    <table class="table">
+        <thead>
+            <tr>
+				<th scope="col">Caretaker Name</th>
+                <th scope="col">Pet Name</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Amount</th>
+				<th scope="col">Payment Method</th>
+				<th scope="col">Transfer To</th>
+				<th scope="col">Transfer From</th>					
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i<transaction.length; i++) { %>
+            <tr>
+                <td><%= transaction[i].name%></td>
+                <td><%= transaction[i].pet_name%></td>
+                <td><%= transaction[i].start_date%></td>
+                <td><%= transaction[i].end_date%></td>
+                <td><%= transaction[i].amount%></td>		
+				<td><%= transaction[i].payment_method%></td>	
+				<td><%= transaction[i].method_to%></td>	
+				<td><%= transaction[i].method_from%></td>	
+				<td><button type="button" data-toggle="modal" data-target="#transactionModal" data-care_taker_email="<%= transaction[i].caretaker_email%>" data-caretaker_name="<%= transaction[i].name%>" data-petname="<%= transaction[i].pet_name%>" data-startdate="<%= transaction[i].start_date%>" data-rating_stars="<%= transaction[i].rating_stars%>" data-rating_comment="<%= transaction[i].rating_comment%>">Give Rating</button></td>									
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+	
+<div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bidModalLabel">Enter Transaction Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+                <form action="/bids_list/confirm" method="POST">
+      <div class="modal-body">
+
+		  <div class="form-group">
+            <label for="caretaker_email" class="col-form-label">Caretaker Email</label>
+            <input type="text" class="form-control" id="caretaker_email" name="caretaker_email" readonly>
+          </div>
+		  
+          <div class="form-group">
+            <label for="pet_owner_name" class="col-form-label">Pet Owner's Name</label>
+            <input type="text" class="form-control" id="pet_owner_name" name="pet_owner_name" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="petowner_email" class="col-form-label">Pet Owner's Email</label>
+            <input type="text" class="form-control" id="petowner_email"  name="petowner_email" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="pet_name" class="col-form-label">Pet Name</label>
+            <input type="text" class="form-control" id="pet_name"  name="pet_name" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="pet_category" class="col-form-label">Pet Category</label>
+            <input type="text" class="form-control" id="pet_category"  name="pet_category" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="pet_requirements" class="col-form-label">Special Requirements</label>
+            <input type="text" class="form-control" id="pet_requirements"  name="pet_requirements" readonly>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label">Date</label>
+			<input type="text" class="form-control" id="start_date"  name="start_date" readonly>             
+			<input type="text" class="form-control" id="end_date"  name="end_date" readonly>
+          </div>
+		  
+          <div class="form-group">
+            <label for="amount" class="col-form-label">Amount</label>
+            <input type="text" class="form-control" id="amount"  name="amount" readonly>
+          </div>
+		  
+          <div class="form-group">
+            <label for="payment_method" class="col-form-label">Payment Method</label>
+			 <select name="payment_method" id="payment_method" required>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+          </div>
+		  
+		  <div class="form-group">
+            <label for="method_to" class="col-form-label">Method of Transfer To</label>
+			 <select name="method_to" id="method_to" required> 
+                <option value="Pet Owner deliver">Pet Owner deliver</option>
+                <option value="Care Taker pick up">Care Taker pick up</option>
+                <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
+            </select>
+          </div>
+		  
+		  <div class="form-group">
+            <label for="method_from" class="col-form-label">Method of Transfer From</label>
+			 <select name="method_from" id="method_from" required>
+                <option value="Pet Owner deliver">Pet Owner deliver</option>
+                <option value="Care Taker pick up">Care Taker pick up</option>
+                <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
+            </select>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="submit" value="Confirm Transaction Details" />
+      </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+<!-----Confirmed transactions----->
+<div class="modal fade" id="transactionModal" tabindex="-1" role="dialog" aria-labelledby="transactionModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="transactionModalLabel">Enter Rating Details</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+                <form action="/bids_list/rating" method="POST">
+      <div class="modal-body">
+		  
+          <div class="form-group">
+		    <input type="text" class="form-control" id="petname"  name="petname" hidden>
+			<input type="text" class="form-control" id="care_taker_email"  name="care_taker_email" hidden>
+            <input type="text" class="form-control" id="startdate"  name="startdate" hidden>
+          </div> 
+
+          <div class="form-group">
+            <label for="rating_stars" class="col-form-label">Rating Stars</label>
+			 <select name="rating_stars" id="rating_stars" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+				<option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+          </div>
+		  
+		  <div class="form-group">
+            <label for="rating_comment" class="col-form-label">Rating Comments</label>
+            <input type="text" class="form-control" id="rating_comment"  name="rating_comment" required>
+          </div>		 
+
+      </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="submit" value="Confirm Rating" />
+      </div>
+            </form>
+    </div>
+  </div>
+</div>
+
+
+</body>
+
+</html>
+
+<script>
+  function confirm_details(name, id){
+    alert(name);
+  }
+  
+  function convert(str) {
+	var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+	return [date.getFullYear(), mnth, day].join("-");
+  }
+
+  // bids modal 
+  $('#bidModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var caretaker_email = button.data('caretaker_email'); 
+  var pet_owner_name = button.data('pet_owner_name');
+  var petowner_email = button.data('petowner_email');
+  var pet_name = button.data('pet_name');
+  var pet_category = button.data('pet_category');
+  var pet_requirements = button.data('pet_requirements');
+  var start_date = button.data('start_date');
+  var end_date = button.data('end_date');
+  var amount = button.data('amount');
+  var payment_method = button.data('payment_method');
+  var method_to = button.data('method_to');
+  var method_from = button.data('method_from');
+  
+  var modal = $(this);
+  modal.find('.modal-title').text('Confirm Transaction Details for ' + pet_owner_name);
+
+  $('#caretaker_email').val(caretaker_email) 
+  $('#pet_owner_name').val(pet_owner_name)
+  $('#petowner_email').val(petowner_email)
+  $('#pet_name').val(pet_name)
+  $('#pet_category').val(pet_category)
+  $('#pet_requirements').val(pet_requirements)
+  $('#start_date').val(convert(start_date))
+  $('#end_date').val(convert(end_date))
+  $('#amount').val(amount)
+  $('#payment_method').val(payment_method)  
+  $('#method_to').val(method_to)  
+  $('#method_from').val(method_from)  
+  
+  })
+  
+  // transaction modal   
+  $('#transactionModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var caretaker_name = button.data('caretaker_name'); 
+  var care_taker_email = button.data('care_taker_email');
+  var petname = button.data('petname');
+  var startdate = button.data('startdate');
+  var rating_stars = button.data('rating_stars');
+  var rating_comment = button.data('rating_comment');
+
+  var modal = $(this);
+  modal.find('.modal-title').text('Enter Rating Details for ' + caretaker_name);
+
+  $('#caretaker_name').val(caretaker_name) 
+  $('#care_taker_email').val(care_taker_email)
+  $('#petname').val(petname)
+  $('#startdate').val(convert(startdate))
+  $('#rating_stars').val(rating_stars)
+  $('#rating_comment').val(rating_comment)
+
+  })
+</script>

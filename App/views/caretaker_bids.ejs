@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <!-- Page Title -->
+    <title>CS2102</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+    <!-- CSS for Styling -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
+        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
+    <!-- JavaScript for Interactivity -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <a href="/logout">Logout</a>
+      <a href="/caretaker_home">Back to home</a>
+
+    <table class="table">
+        <thead>
+            <tr>
+				<th scope="col">Pet Owner Name</th>
+                <th scope="col">Pet Name</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Bid Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i<data.length; i++) { %>
+            <tr>
+                <td><%= data[i].name%></td>
+                <td><%= data[i].pet_name%></td>
+                <td><%= data[i].startdate%></td>
+                <td><%= data[i].enddate%></td>
+                <td><%= data[i].amount%></td>
+				<% if (data[i].status == 0) { %>
+					<td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-bid_amount="<%= data[i].amount%>">Accept Bid</button></td>
+				<% } %>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+	
+<div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bidModalLabel">Accept Bid</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+                <form action="/caretaker_bids/accept" method="POST">
+      <div class="modal-body">
+
+
+		  <div class="form-group">
+            <label for="caretaker_email" class="col-form-label">My Email</label>
+            <input type="text" class="form-control" id="caretaker_email" name="caretaker_email" readonly>
+          </div>
+		  
+          <div class="form-group">
+            <label for="pet_owner_name" class="col-form-label">Pet Owner Name</label>
+            <input type="text" class="form-control" id="pet_owner_name" name="pet_owner_name" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="petowner_email" class="col-form-label">Pet Owner Email</label>
+            <input type="text" class="form-control" id="petowner_email"  name="petowner_email" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="pet_name" class="col-form-label">Pet Name</label>
+            <input type="text" class="form-control" id="pet_name"  name="pet_name" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="pet_category" class="col-form-label">Pet Category</label>
+            <input type="text" class="form-control" id="pet_category"  name="pet_category" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="pet_requirements" class="col-form-label">Special Requirements</label>
+            <input type="text" class="form-control" id="pet_requirements"  name="pet_requirements" readonly>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label">Date</label>
+			<input type="text" class="form-control" id="start_date"  name="start_date" readonly>             
+			<input type="text" class="form-control" id="end_date"  name="end_date" readonly>
+          </div>
+		  
+          <div class="form-group">
+            <label for="bid_amount" class="col-form-label">Bid Amount</label>
+            <input type="text" class="form-control" id="bid_amount"  name="bid_amount" readonly>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <input type="submit" value="Accept Bid" />
+      </div>
+            </form>
+    </div>
+  </div>
+</div>	
+
+</body>
+
+</html>
+
+<script>
+  function accept(name, id){
+    alert(name);
+  }
+  
+  function convert(str) {
+	var date = new Date(str),
+    mnth = ("0" + (date.getMonth() + 1)).slice(-2),
+    day = ("0" + date.getDate()).slice(-2);
+	return [date.getFullYear(), mnth, day].join("-");
+  }
+
+  $('#bidModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var caretaker_email = button.data('caretaker_email'); 
+  var pet_owner_name = button.data('pet_owner_name');
+  var petowner_email = button.data('petowner_email');
+  var pet_name = button.data('pet_name');
+  var pet_category = button.data('pet_category');
+  var pet_requirements = button.data('pet_requirements');
+  var start_date = button.data('start_date');
+  var end_date = button.data('end_date');
+  var bid_amount = button.data('bid_amount');
+  
+  var caretaker_email = button.data('caretaker_email'); // additional data to be filled in pets_taken_care_by table
+
+  var modal = $(this);
+  modal.find('.modal-title').text('Accept Bid from ' + pet_owner_name);
+
+  $('#caretaker_email').val(caretaker_email) 
+
+  $('#pet_owner_name').val(pet_owner_name)
+  $('#petowner_email').val(petowner_email)
+  $('#pet_name').val(pet_name)
+  $('#pet_category').val(pet_category)
+  $('#pet_requirements').val(pet_requirements)
+  $('#start_date').val(convert(start_date))
+  $('#end_date').val(convert(end_date))
+  $('#bid_amount').val(bid_amount)  
+  
+  })
+</script>
