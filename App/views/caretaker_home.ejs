@@ -90,6 +90,34 @@
         </tbody>
     </table>
 
+</br>
+
+
+<p>Declare your leaves</p>
+<form action="/caretaker_home/takeleaves" method="POST">
+    <div>
+        <span>Start date</span>
+        <input type="date" id="start_date" name="start_date" required>
+        <span>End date</span>
+        <input type="date" id="end_date" name="end_date" required>
+    </div>
+    <div>
+        <input type="submit" value="Take leave" />
+    </div>
+</form>
+
+<ul>
+    <% if(messages.success_msg) { %>
+    <li><%= messages.success_msg %></li>
+    <% } %>
+</ul>
+
+<ul>
+    <% if (messages.error) { %>
+    <li><%= messages.error %></li>
+    <% } %>
+</ul>
+
 </body>
 
 </html>

@@ -171,6 +171,7 @@ app.post("/pet_owner_register", async (req, res) => {
       password,
       password2,
     });
+    console.log(errors);
   } else {
     hashedPassword = await bcrypt.hash(password, 10);
     console.log(hashedPassword);
@@ -199,7 +200,7 @@ app.post("/pet_owner_register", async (req, res) => {
               if (err) {
                 throw err;
               }
-              console.log(results.rows);
+              console.log("result", results.rows);
               req.flash(
                 "success_msg",
                 "You are now registered pet_owner. Please log in"
@@ -459,7 +460,7 @@ app.post(
           if (err) {
             throw err;
           }
-          console.log(results.rows);
+          console.log("charge", results.rows);
           req.flash(
             "success_msg",
             "You successfully added a charge for a pet category"
@@ -515,6 +516,65 @@ app.post(
   }
 )
 
+//care taker take leaves
+app.post(
+  "/caretaker_home/takeleaves", async (req, res) => {
+    let email = req.user.email;
+    let {start_date, end_date} = req.body;
+    console.log({
+      start_date,
+      end_date
+    });
+
+    let errors = [];
+
+
+    if (!start_date || !end_date) {
+      errors.push({ message: "Please enter all fields" });
+    }
+    if (errors.length > 0) {
+      res.render("caretaker_home", {
+        start_date,
+        end_date
+      });
+    } else {
+      pool.query(
+        `CALL caretaker_take_leaves($1, $2, $3)`,
+        [email, start_date, end_date],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          pool.query(
+            `SELECT * FROM full_time_takes_leave WHERE caretaker_email = $1 AND start_date = $2 AND end_date = $3`,
+            [email, start_date, end_date],
+            (err, results) => {
+              if (err) {
+                throw err;
+              }
+              console.log("result", results.rows);
+              if (results.rows.length > 0) {
+                req.flash(
+                  "success_msg",
+                  "You successfully added a leave"
+                );
+              } else {
+                req.flash(
+                  "error",
+                  "You are currently taking care of at least one pet"
+                )
+              }
+              res.redirect("/caretaker_home");
+            }
+          ) 
+          
+        }
+
+      );
+    }
+  }
+)
+
 // pet owner searches for caretaker for his pet
 app.post(
   "/caretaker_search", async (req, res) => {
@@ -543,7 +603,12 @@ app.post(
           res.render('caretaker_search', { title: 'Care Taker', all_pet: all_pet_data.rows, user: req.user.name});
       });
     } else {
-      pool.query(`SELECT * FROM ((caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email) INNER JOIN  caretaker_has_availability ca ON c.email = ca.caretaker_email) WHERE cc.category_name = $1 AND ca.start_date <= $2 AND ca.end_date >= $3`, [select_category, start_date, end_date], (err, data) => {
+      pool.query(`SELECT * 
+                  FROM ((caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email) 
+                  INNER JOIN caretaker_has_availability ca ON c.email = ca.caretaker_email
+                  INNER JOIN full_time_takes_leave ft ON c.email = ft.caretaker_email) 
+                  WHERE cc.category_name = $1 AND ca.start_date <= $2 AND ca.end_date >= $3 AND (ft.end_date < $2)`, 
+                  [select_category, start_date, end_date], (err, data) => {
         res.render('caretaker_list', { title: 'Caretaker List', data: data.rows, user: req.user.name, userEmail: email, petName: select_name, petCategory: select_category, petRequirements: select_requirements,  startDate: start_date, endDate:end_date});
       });
     }
