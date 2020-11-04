@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS admin (
 );
 
 CREATE TABLE IF NOT EXISTS pet_category (
-    category_name VARCHAR PRIMARY KEY
+    category_name VARCHAR PRIMARY KEY,
+    basic_charge NUMERIC NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS pets_own_by (

@@ -61,9 +61,20 @@ app.get("/dashboard", checkNotAuthenticated, (req, res) => {
     res.redirect("/pet_owner_home");
   } else if (req.user.email.includes("+caretaker")) {
     res.redirect("/caretaker_home");
+  } else if (req.user.email.includes("+admin")) {
+    res.redirect("/admin_home");
   } else {
     res.render("dashboard", { user: req.user.name });
   }
+});
+
+// Admin Home
+app.get("/admin_home", checkNotAuthenticated, (req, res) => {
+  let email = req.user.email;
+  pool.query(`SELECT * FROM pet_category`, (err, data) => {
+    let all_category_data = data;
+		res.render('admin_home', { title: 'Admin Home', all_category: all_category_data.rows, user: req.user.name});
+	});
 });
 
 // Pet Owner Home
@@ -423,6 +434,50 @@ app.post(
           res.redirect("/pet_owner_home");
         }
       );
+    }
+  }
+)
+
+// admin adds pet category with basic charge
+app.post(
+  "/admin_home/category", async (req, res) => {
+    let {category_name} = req.body;
+    let {basic_charge} = req.body;
+    console.log({
+      category_name,
+      basic_charge
+    });
+
+    let errors = [];
+
+    if (!category_name) {
+      errors.push({ message: "Please enter the category" });
+    }
+    if (!basic_charge) {
+      errors.push({ message: "Please enter the daily charge" });
+    }
+    if (errors.length > 0) {
+      res.render("admin_home", {
+        category
+      });
+    } else {
+      pool.query(
+        `INSERT INTO pet_category (category_name, basic_charge)
+          VALUES ($1, $2)
+          `,
+        [category_name, basic_charge],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log("pet_category", results.rows);
+          req.flash(
+            "success_msg",
+            "You successfully added a pet category"
+          );
+        }
+      );
+      res.redirect("/admin_home");
     }
   }
 )
