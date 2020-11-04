@@ -59,6 +59,18 @@
 
     </br>
     <p>Declare your availbality.</p>
+
+    <ul>
+        <% if(messages.available_success_msg) { %>
+        <li><%= messages.available_success_msg %></li>
+        <% } %>
+    </ul>
+
+    <ul>
+        <% if (messages.available_error) { %>
+        <li><%= messages.available_error %></li>
+        <% } %>
+    </ul>
     <form action="/caretaker_home/availability" method="POST">
         <div>
             <span>Start date</span>
@@ -115,6 +127,11 @@
 <ul>
     <% if (messages.error) { %>
     <li><%= messages.error %></li>
+    <% } %>
+</ul>
+<ul>
+    <% if (messages.date_error) { %>
+    <li><%= messages.date_error %></li>
     <% } %>
 </ul>
 

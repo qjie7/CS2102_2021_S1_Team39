@@ -21,8 +21,7 @@ CREATE TABLE IF NOT EXISTS admin (
 );
 
 CREATE TABLE IF NOT EXISTS pet_category (
-    category_name VARCHAR PRIMARY KEY,
-    basic_charge NUMERIC NOT NULL
+    category_name VARCHAR PRIMARY KEY
 );
 
 CREATE TABLE IF NOT EXISTS pets_own_by (
@@ -39,7 +38,8 @@ CREATE TABLE IF NOT EXISTS caretaker_has_availability (
 	caretaker_email VARCHAR REFERENCES caretaker(email),
 	start_date DATE,
 	end_date DATE,
-	PRIMARY KEY (caretaker_email, start_date, end_date)
+	PRIMARY KEY (caretaker_email, start_date, end_date),
+    CHECK(start_date <= end_date)
 );
 
 CREATE TABLE IF NOT EXISTS caretaker_has_charge (
@@ -57,7 +57,8 @@ CREATE TABLE IF NOT EXISTS pet_owner_bids_for (
     enddate         DATE NOT NULL UNIQUE,
     amount          NUMERIC NOT NULL,
 	status			BIT DEFAULT 0::BIT NOT NULL,
-    PRIMARY KEY (pet_owner_email, caretaker_email, pet_name, startdate, enddate)
+    PRIMARY KEY (pet_owner_email, caretaker_email, pet_name, startdate, enddate),
+    CHECK(startdate <= enddate)
 );
 
 CREATE TABLE IF NOT EXISTS pets_taken_care_by (
@@ -81,7 +82,8 @@ CREATE TABLE full_time_takes_leave(
   	                       ON DELETE CASCADE,
 	start_date DATE NOT NULL,
 	end_date DATE NOT NULL,
-	PRIMARY KEY(caretaker_email, start_date)
+	PRIMARY KEY(caretaker_email, start_date),
+    CHECK(start_date <= end_date)
 );
 
 

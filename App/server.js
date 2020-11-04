@@ -106,7 +106,7 @@ app.get("/caretaker_search", checkNotAuthenticated, (req, res) => {
 
     pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[email], (err, data) => {
       let all_pet_data = data;
-        res.render('caretaker_search', { title: 'Care Taker', all_pet: all_pet_data.rows, user: req.user.name});
+        res.render('caretaker_search', { title: 'Care Taker', errors: {}, all_pet: all_pet_data.rows, user: req.user.name});
 
     });
 });
@@ -555,15 +555,28 @@ app.post(
           `,
         [email, start_date, end_date],
         (err, results) => {
-          if (err) {
-            throw err;
-          }
-          console.log(results.rows);
-          req.flash(
-            "success_msg",
-            "You successfully added an availability"
-          );
-          res.redirect("/caretaker_home");
+          pool.query(
+            `SELECT * FROM caretaker_has_availability WHERE caretaker_email = $1 AND start_date = $2 AND end_date = $3`,
+            [email, start_date, end_date],
+            (err, results) => {
+              if (err) {
+                throw err;
+              }
+              console.log("result", results.rows);
+              if (results.rows.length > 0) {
+                req.flash(
+                  "available_success_msg",
+                  "You successfully added your available days"
+                );
+              } else {
+                req.flash(
+                  "available_error",
+                  "Invalid available days! Please check your selections"
+                )
+              }
+              res.redirect("/caretaker_home");
+            }
+          )
         }
       );
 
@@ -597,9 +610,6 @@ app.post(
         `CALL caretaker_take_leaves($1, $2, $3)`,
         [email, start_date, end_date],
         (err, results) => {
-          if (err) {
-            throw err;
-          }
           pool.query(
             `SELECT * FROM full_time_takes_leave WHERE caretaker_email = $1 AND start_date = $2 AND end_date = $3`,
             [email, start_date, end_date],
@@ -616,7 +626,7 @@ app.post(
               } else {
                 req.flash(
                   "error",
-                  "You are currently taking care of at least one pet"
+                  "Failed to take leave! You are currently taking care of at least one pet or You could have entered an invalid date"
                 )
               }
               res.redirect("/caretaker_home");
@@ -651,11 +661,15 @@ app.post(
     if (!start_date || !end_date) {
       errors.push({ message: "Please enter all fields" });
     }
+
+    if (start_date >= end_date) {
+      errors.push({ message: "Invalid Date! Please check you date input" });
+    }
 	
     if (errors.length > 0) {
       pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[email], (err, data) => {
         let all_pet_data = data;
-          res.render('caretaker_search', { title: 'Care Taker', all_pet: all_pet_data.rows, user: req.user.name});
+          res.render('caretaker_search', { errors: errors, title: 'Care Taker', all_pet: all_pet_data.rows, user: req.user.name});
       });
     } else {
       pool.query(`SELECT * 
