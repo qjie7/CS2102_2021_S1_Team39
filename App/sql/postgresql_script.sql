@@ -99,3 +99,18 @@ $$ DECLARE pet_count NUMERIC;
             END IF;
             END; $$
 LANGUAGE plpgsql;
+
+CREATE OR REPLACE PROCEDURE caretaker_charge(input_email VARCHAR, input_category VARCHAR, input_charge NUMERIC) as
+$$ DECLARE 
+  caretaker_type VARCHAR;
+  amount NUMERIC;
+  begin
+    SELECT type FROM caretaker INTO caretaker_type WHERE email = input_email;
+    SELECT basic_charge FROM pet_category INTO amount WHERE category_name = input_category;
+  IF caretaker_type = 'part_time' THEN
+    INSERT INTO caretaker_has_charge VALUES (input_email, input_category, input_charge);
+  ELSE 
+    INSERT INTO caretaker_has_charge VALUES (input_email, input_category, amount);
+  END IF;
+END; $$
+language 'plpgsql';

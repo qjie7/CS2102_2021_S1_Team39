@@ -88,13 +88,16 @@ app.get("/pet_owner_home", checkNotAuthenticated, (req, res) => {
 // Care Taker Home
 app.get("/caretaker_home", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
-  pool.query(`SELECT * FROM caretaker_has_availability WHERE caretaker_email = $1`, [email], (err, data) => {
-    let availability_data = data;
-    pool.query(`SELECT * FROM pet_category`, (err, data) => {
-      let all_category_data = data;
-      pool.query(`SELECT * FROM caretaker_has_charge WHERE caretaker_email = $1`, [email], (err, data) => {
-        let charge_data = data;
-        res.render('caretaker_home', { title: 'Care Taker', charge: charge_data.rows, all_category: all_category_data.rows, availability: availability_data.rows, user: req.user.name});
+  pool.query(`SELECT * FROM caretaker WHERE email = $1`, [email], (err, data) => {
+    let caretaker_type_data = data;
+    pool.query(`SELECT * FROM caretaker_has_availability WHERE caretaker_email = $1`, [email], (err, data) => {
+      let availability_data = data;
+      pool.query(`SELECT * FROM pet_category`, (err, data) => {
+        let all_category_data = data;
+        pool.query(`SELECT * FROM caretaker_has_charge WHERE caretaker_email = $1`, [email], (err, data) => {
+          let charge_data = data;
+          res.render('caretaker_home', { title: 'Care Taker', caretaker_type: caretaker_type_data.rows, charge: charge_data.rows, all_category: all_category_data.rows, availability: availability_data.rows, user: req.user.name});
+        });
       });
     });
   });
@@ -498,18 +501,24 @@ app.post(
     if (!select_category) {
       errors.push({ message: "Please enter the category" });
     }
-    if (!charge) {
-      errors.push({ message: "Please enter the daily charge" });
-    }
+    pool.query(`SELECT * FROM caretaker WHERE email = $1`, [email], (err, data) => {
+      let type = data.rows[0].type;
+      if (type == "part_time") {
+        if (!charge) {
+          errors.push({ message: "Please enter the daily charge" });
+        }
+      }
+    });
     if (errors.length > 0) {
       res.render("caretaker_home", {
-        category
+        select_category
       });
     } else {
+      console.log({
+        email
+      });
       pool.query(
-        `INSERT INTO caretaker_has_charge (caretaker_email, category_name, amount)
-          VALUES ($1, $2, $3)
-          `,
+        `CALL caretaker_charge($1, $2, $3)`,
         [email, select_category, charge],
         (err, results) => {
           if (err) {

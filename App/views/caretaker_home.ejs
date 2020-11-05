@@ -33,7 +33,9 @@
                 <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
             <% } %>
         </select>
-        <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
+        <% if (caretaker_type[0].type == 'part_time') { %>
+            <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
+        <% } %>
         <div>
             <input type="submit" value="Add Charge" />
         </div>
