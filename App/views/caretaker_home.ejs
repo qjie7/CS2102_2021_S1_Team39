@@ -25,15 +25,16 @@
 <body>
 
     <a href="/logout">Logout</a>
-		<a href="/caretaker_bids">Accept bid requests</a>
+    <a href="/caretaker_bids">Accept bid requests</a>
     <h3>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h3>
     <form action="/caretaker_home/charge" method="POST">
         <select name="select_category" id="select_category">
             <% for(var i=0; i<all_category.length; i++) { %>
-                <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
+            <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
             <% } %>
         </select>
-        <% if (caretaker_type[0].type == 'part_time') { %>
+        <!-- <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required /> -->
+        <% if (caretaker_type == 'part_time') { %>
             <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
         <% } %>
         <div>
@@ -73,6 +74,7 @@
         <li><%= messages.available_error %></li>
         <% } %>
     </ul>
+
     <form action="/caretaker_home/availability" method="POST">
         <div>
             <span>Start date</span>
@@ -84,9 +86,8 @@
         </div>
     </form>
 
-
     <p>My availability.</p>
-    
+
     <table class="table">
         <thead>
             <tr>
@@ -104,38 +105,55 @@
         </tbody>
     </table>
 
-</br>
+    </br>
 
 
-<p>Declare your leaves</p>
-<form action="/caretaker_home/takeleaves" method="POST">
-    <div>
-        <span>Start date</span>
-        <input type="date" id="start_date" name="start_date" required>
-        <span>End date</span>
-        <input type="date" id="end_date" name="end_date" required>
-    </div>
-    <div>
-        <input type="submit" value="Take leave" />
-    </div>
-</form>
+    <p>Declare your leaves</p>
+    <form action="/caretaker_home/takeleaves" method="POST">
+        <div>
+            <span>Start date</span>
+            <input type="date" id="start_date" name="start_date" required>
+            <span>End date</span>
+            <input type="date" id="end_date" name="end_date" required>
+        </div>
+        <div>
+            <input type="submit" value="Take leave" />
+        </div>
+    </form>
 
-<ul>
-    <% if(messages.success_msg) { %>
-    <li><%= messages.success_msg %></li>
-    <% } %>
-</ul>
+    <ul>
+        <% if(messages.success_msg) { %>
+        <li><%= messages.success_msg %></li>
+        <% } %>
+    </ul>
 
-<ul>
-    <% if (messages.error) { %>
-    <li><%= messages.error %></li>
-    <% } %>
-</ul>
-<ul>
-    <% if (messages.date_error) { %>
-    <li><%= messages.date_error %></li>
-    <% } %>
-</ul>
+    <ul>
+        <% if (messages.error) { %>
+        <li><%= messages.error %></li>
+        <% } %>
+    </ul>
+    <ul>
+        <% if (messages.date_error) { %>
+        <li><%= messages.date_error %></li>
+        <% } %>
+    </ul>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i<leave.length; i++) { %>
+            <tr>
+                <td><%= leave[i].start_date.toDateString()%></td>
+                <td><%= leave[i].end_date.toDateString()%></td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
 
 </body>
 

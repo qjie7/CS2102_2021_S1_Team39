@@ -1,3 +1,16 @@
+DROP TABLE admin CASCADE;
+DROP TABLE caretaker CASCADE;
+DROP TABLE caretaker_has_availability CASCADE;
+DROP TABLE caretaker_has_charge CASCADE;
+DROP TABLE caretaker_salaried_by CASCADE;
+DROP TABLE full_time_takes_leave CASCADE;
+DROP TABLE pet_category CASCADE;
+DROP TABLE pet_owner CASCADE;
+DROP TABLE pet_owner_bids_for CASCADE;
+DROP TABLE pets_own_by CASCADE;
+DROP TABLE pets_taken_care_by CASCADE;
+
+
 CREATE TABLE IF NOT EXISTS pet_owner (
     email       VARCHAR PRIMARY KEY,
     name        VARCHAR(64) NOT NULL,
@@ -87,6 +100,16 @@ CREATE TABLE full_time_takes_leave(
     CHECK(start_date <= end_date)
 );
 
+CREATE TABLE caretaker_salaried_by(
+	caretaker_email  VARCHAR REFERENCES caretaker(email), 
+	admin_email VARCHAR REFERENCES admin(email),
+	amount NUMERIC NOT NULL,
+	year INTEGER NOT NULL,
+	month INTEGER NOT NULL,
+	PRIMARY KEY(caretaker_email, year, month)
+);
+
+
 
 CREATE OR REPLACE PROCEDURE
 caretaker_take_leaves(email VARCHAR, s_date DATE, e_date DATE) AS
@@ -101,6 +124,25 @@ $$ DECLARE pet_count NUMERIC;
             END; $$
 LANGUAGE plpgsql;
 
+CREATE OR REPLACE FUNCTION
+caretaker_availability() RETURNS TRIGGER AS
+$$ DECLARE ct NUMERIC;
+    BEGIN 
+        SELECT COUNT(*) INTO ct FROM caretaker C
+        WHERE NEW.caretaker_email = C.email AND C.type = 'full_time';
+        IF ct > 0 AND NEW.end_date - NEW.start_date < 150 THEN 
+            RETURN NULL;
+        ELSE 
+            RETURN NEW;  
+        END IF;
+        END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER
+check_fulltime_availability
+BEFORE INSERT OR UPDATE ON caretaker_has_availability
+FOR EACH ROW EXECUTE PROCEDURE caretaker_availability();
+
 CREATE OR REPLACE PROCEDURE caretaker_charge(input_email VARCHAR, input_category VARCHAR, input_charge NUMERIC) as
 $$ DECLARE 
   caretaker_type VARCHAR;
@@ -114,4 +156,4 @@ $$ DECLARE
     INSERT INTO caretaker_has_charge VALUES (input_email, input_category, amount);
   END IF;
 END; $$
-language 'plpgsql';
+language 'plpgsql'; 

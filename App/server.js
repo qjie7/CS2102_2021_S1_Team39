@@ -3,6 +3,7 @@ const app = express();
 const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
+const async = require("async");
 
 const { pool } = require("./dbConfig");
 
@@ -88,22 +89,25 @@ app.get("/pet_owner_home", checkNotAuthenticated, (req, res) => {
 // Care Taker Home
 app.get("/caretaker_home", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
-  pool.query(`SELECT * FROM caretaker WHERE email = $1`, [email], (err, data) => {
-    let caretaker_type_data = data;
-    pool.query(`SELECT * FROM caretaker_has_availability WHERE caretaker_email = $1`, [email], (err, data) => {
-      let availability_data = data;
-      pool.query(`SELECT * FROM pet_category`, (err, data) => {
-        let all_category_data = data;
-        pool.query(`SELECT * FROM caretaker_has_charge WHERE caretaker_email = $1`, [email], (err, data) => {
-          let charge_data = data;
-          res.render('caretaker_home', { title: 'Care Taker', caretaker_type: caretaker_type_data.rows, charge: charge_data.rows, all_category: all_category_data.rows, availability: availability_data.rows, user: req.user.name});
-        });
+  let type = req.user.type;
+  // console.log(type);
+  pool.query(`SELECT * FROM caretaker_has_availability WHERE caretaker_email = $1`, [email], (err, data) => {
+    let availability_data = data;
+    pool.query(`SELECT * FROM pet_category`, (err, data) => {
+      let all_category_data = data;
+      pool.query(`SELECT * FROM caretaker_has_charge WHERE caretaker_email = $1`, [email], (err, data) => {
+        let charge_data = data;
+        pool.query(`SELECT * FROM full_time_takes_leave WHERE caretaker_email = $1`, [email],(err, data) => {
+          let leave_data = data;
+          res.render('caretaker_home', { title: 'Care Taker', caretaker_type: type, charge: charge_data.rows, all_category: all_category_data.rows, availability: availability_data.rows, user: req.user.name, leave: leave_data.rows});
+        })
+        
       });
     });
   });
 });
 
-// Care Taker Search
+//Care Taker Search
 app.get("/caretaker_search", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
 
@@ -118,9 +122,9 @@ app.get("/caretaker_search", checkNotAuthenticated, (req, res) => {
 app.get("/bids_list", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
 
-    pool.query(`SELECT * FROM pet_owner_bids_for NATURAL JOIN pets_own_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[email], (err, data) => {
+    pool.query(`SELECT * FROM pet_owner_bids_for B INNER JOIN caretaker C ON  B.caretaker_email = C.email WHERE pet_owner_email = $1`,[email], (err, data) => {
       let all_bid_data = data;
-	  pool.query(`SELECT * FROM pets_taken_care_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[email], (err, data) => {
+	  pool.query(`SELECT * FROM pets_taken_care_by T INNER JOIN caretaker C ON  T.caretaker_email = C.email WHERE pet_owner_email = $1`,[email], (err, data) => {
       let all_transaction_data = data;
         res.render('bids_list', { title: 'My Bids', data: all_bid_data.rows, transaction: all_transaction_data.rows, user: req.user.name});
 	  });
@@ -501,6 +505,9 @@ app.post(
     if (!select_category) {
       errors.push({ message: "Please enter the category" });
     }
+    // if (!charge) {
+    //   errors.push({ message: "Please enter the daily charge" });
+    // }
     pool.query(`SELECT * FROM caretaker WHERE email = $1`, [email], (err, data) => {
       let type = data.rows[0].type;
       if (type == "part_time") {
@@ -509,8 +516,10 @@ app.post(
         }
       }
     });
+
     if (errors.length > 0) {
       res.render("caretaker_home", {
+        // category
         select_category
       });
     } else {
@@ -518,6 +527,9 @@ app.post(
         email
       });
       pool.query(
+        // `INSERT INTO caretaker_has_charge (caretaker_email, category_name, amount)
+        //   VALUES ($1, $2, $3)
+        //   `,
         `CALL caretaker_charge($1, $2, $3)`,
         [email, select_category, charge],
         (err, results) => {
@@ -541,7 +553,9 @@ app.post(
   "/caretaker_home/availability", async (req, res) => {
     let email = req.user.email;
     let {start_date, end_date} = req.body;
+    
     console.log({
+
       start_date,
       end_date
     });
@@ -681,12 +695,14 @@ app.post(
           res.render('caretaker_search', { errors: errors, title: 'Care Taker', all_pet: all_pet_data.rows, user: req.user.name});
       });
     } else {
-      pool.query(`SELECT * 
+      pool.query(       
+                 `SELECT * 
                   FROM ((caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email) 
-                  INNER JOIN caretaker_has_availability ca ON c.email = ca.caretaker_email
-                  INNER JOIN full_time_takes_leave ft ON c.email = ft.caretaker_email) 
-                  WHERE cc.category_name = $1 AND ca.start_date <= $2 AND ca.end_date >= $3 AND (ft.end_date < $2)`, 
+                  INNER JOIN caretaker_has_availability ca ON c.email = ca.caretaker_email)
+                  WHERE cc.category_name = $1 AND ca.start_date <= $2 AND ca.end_date >= $3`, 
                   [select_category, start_date, end_date], (err, data) => {
+                    if (err) throw err;
+                    console.log(data.rows);
         res.render('caretaker_list', { title: 'Caretaker List', data: data.rows, user: req.user.name, userEmail: email, petName: select_name, petCategory: select_category, petRequirements: select_requirements,  startDate: start_date, endDate:end_date});
       });
     }
@@ -866,6 +882,110 @@ app.post(
   }
 )
 
+// admin salary to caretaker
+app.post(
+  "/admin_home/salary", async (req, res) => {
+    let {year} = req.body;
+    let {month} = req.body;
+    let email = req.user.email;
+    console.log({
+      year,
+      month,
+      email
+    });
+
+    let errors = [];
+
+    if (!year) {
+      errors.push({ message: "Please enter the year" });
+    }
+    if (!month) {
+      errors.push({ message: "Please enter the month" });
+    }
+
+    if (errors.length > 0) {
+      res.render("admin_home", {
+        year,
+        month,
+        email
+      });
+    } else { 
+      pool.query(
+        `SELECT email, type FROM caretaker`,
+        (err, results)=> {
+          if (err) throw err;
+          let caretakers = results.rows;
+          console.log(caretakers);
+
+          async.eachSeries(
+            caretakers, function(caretaker, callback){
+              pool.query(
+                `SELECT amount, start_date, end_date FROM pets_taken_care_by ptcb
+                 WHERE ptcb.caretaker_email = $1 AND date_part('month', start_date) = $2 
+                 AND date_part('year', start_date) = $3`,
+                 [caretaker.email, month, year],
+                 (err, results)=> {
+                  if (err) {
+                    callback(new Error('Failed to process' + caretaker));
+                  } else {
+                    console.log(caretaker + 'processed');
+                    callback(null);
+                  }
+                      var sum = 0;
+                      var pet_day = 0;
+                      var transactions = results.rows;
+                      console.log(transactions);
+                      console.log(caretaker.type);
+                  if (caretaker.type == 'full_time') {
+
+                    for (var i = 0; i < transactions.length; i++) {
+                      let s_date = Date.parse(transactions[i].start_date) / (60*60*24*1000);
+                      let e_date = Date.parse(transactions[i].end_date) / (60*60*24*1000);
+                      //sum += (e_date - s_date + 1) * transactions[i].amount;
+                      if (pet_day < 60) {
+                        pet_day += e_date - s_date + 1;
+                      } else {
+                        sum += (e_date - s_date + 1) * (transactions[i].amount * 0.8);
+                      }
+                      
+                    }
+                    sum += 3000;
+                      
+                  } else {
+                    for (var i = 0; i < transactions.length; i++) {
+                      let s_date = Date.parse(transactions[i].start_date) / (60*60*24*1000);
+                      let e_date = Date.parse(transactions[i].end_date) / (60*60*24*1000);
+                      sum += (e_date - s_date + 1) * (transactions[i].amount * 0.75);
+                    }
+                  }
+                  
+                  pool.query(
+                    `INSERT INTO caretaker_salaried_by VALUES ($1, $2, $3, $4, $5)`,
+                    [caretaker.email,email, sum, year, month],
+                    (err, results)=> {
+                      if (err) {
+                        throw err;
+                      }
+                    }
+                  );
+
+
+
+                 }
+              );
+            }
+          )
+        }
+      );
+    }
+    req.flash(
+      "success_msg",
+      "Successfully inserted caretaker salary "
+    );
+    res.redirect("/admin_home");
+  }
+)
+
 /* ----------------------------------------------------- */
 
 /* ------------------- Functions --------------------- */
@@ -882,6 +1002,22 @@ function checkNotAuthenticated(req, res, next) {
   }
   res.redirect("/index");
 }
+
+// Date.prototype.addDays = function(days) {
+//   var date = new Date(this.valueOf());
+//   date.setDate(date.getDate() + days);
+//   return date;
+// }
+
+// Date.prototype.yyyymmdd = function() {
+//   var mm = this.getMonth() + 1; // getMonth() is zero-based
+//   var dd = this.getDate();
+
+//   return [this.getFullYear(),
+//           (mm>9 ? '' : '0') + mm,
+//           (dd>9 ? '' : '0') + dd
+//          ].join('');
+// };
 
 /* ----------------------------------------------------- */
 
