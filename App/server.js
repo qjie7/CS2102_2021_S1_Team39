@@ -112,7 +112,7 @@ app.get("/caretaker_search", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
 
     pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[email], (err, data) => {
-      let all_pet_data = data;
+      let all_pet_data = data; 
         res.render('caretaker_search', { title: 'Care Taker', errors: {}, all_pet: all_pet_data.rows, user: req.user.name});
 
     });
@@ -723,6 +723,7 @@ app.post(
 
     console.log("print bid", petowner_email);
 
+
     if (errors.length > 0) {
       pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {
         let all_pet_data = data;
@@ -735,18 +736,41 @@ app.post(
           `,
         [petowner_email, caretaker_email, pet_name, start_date, end_date, bid_amount],
         (err, results) => {
-          if (err) {
-            throw err;
-          }
-          console.log(results.rows);
-          req.flash(
-            "success_msg",
-            "You successfully sent a bid"
-          );
-          res.redirect("/pet_owner_home");
+          // if (err) {
+          //   throw err;
+          // }
+          pool.query(
+            `SELECT * FROM pet_owner_bids_for WHERE pet_owner_email = $1 AND caretaker_email = $2 AND pet_name = $3 AND startdate = $4 AND enddate = $5`,
+            [petowner_email, caretaker_email, pet_name, start_date, end_date],
+            (err, results) => {
+              if (err) {
+                throw err;
+              }
+              console.log("result", results.rows);
+              if (results.rows.length > 0) {
+                req.flash(
+                  "success_msg",
+                  "You successfully bid for the caretaker"
+                );
+              } else {
+                req.flash(
+                  "error_msg",
+                  "Invalid bid selection. It has already been taken care."
+                )
+              }
+              res.redirect("/caretaker_search");
+            }
+          )
+          // console.log(results.rows);
+          // req.flash(
+          //   "success_msg",
+          //   "You successfully sent a bid"
+          // );
+          // res.redirect("/pet_owner_home");
         }
       );
     }
+    
 
   }
 )

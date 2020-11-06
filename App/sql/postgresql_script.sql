@@ -66,9 +66,9 @@ CREATE TABLE IF NOT EXISTS caretaker_has_charge (
 CREATE TABLE IF NOT EXISTS pet_owner_bids_for (
     pet_owner_email VARCHAR REFERENCES pet_owner(email),
     caretaker_email VARCHAR REFERENCES caretaker(email),
-    pet_name        VARCHAR REFERENCES pets_own_by(pet_name) UNIQUE,
-    startdate       DATE NOT NULL UNIQUE,
-    enddate         DATE NOT NULL UNIQUE,
+    pet_name        VARCHAR REFERENCES pets_own_by(pet_name),
+    startdate       DATE NOT NULL,
+    enddate         DATE NOT NULL,
     amount          NUMERIC NOT NULL,
 	status			BIT DEFAULT 0::BIT NOT NULL,
     PRIMARY KEY (pet_owner_email, caretaker_email, pet_name, startdate, enddate),
@@ -156,4 +156,24 @@ $$ DECLARE
     INSERT INTO caretaker_has_charge VALUES (input_email, input_category, amount);
   END IF;
 END; $$
-language 'plpgsql'; 
+language plpgsql; 
+
+    CREATE OR REPLACE FUNCTION
+    being_taken_care() RETURNS TRIGGER AS
+    $$ DECLARE ct NUMERIC;
+        BEGIN 
+            SELECT COUNT(*) INTO ct FROM pets_taken_care_by ptcb
+            WHERE NEW.pet_owner_email = ptcb.pet_owner_email AND NEW.pet_name = ptcb.pet_name
+            AND NEW.startdate >= ptcb.start_date AND NEW.enddate <= ptcb.end_date;
+            IF ct > 0 THEN 
+                RETURN NULL;
+            ELSE 
+                RETURN NEW;  
+            END IF;
+            END; $$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER
+check_being_taken_care
+BEFORE INSERT OR UPDATE ON pet_owner_bids_for
+FOR EACH ROW EXECUTE PROCEDURE being_taken_care();
