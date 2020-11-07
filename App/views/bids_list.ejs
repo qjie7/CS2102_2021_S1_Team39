@@ -41,13 +41,15 @@
         <tbody>
             <% for(var i=0; i<data.length; i++) { %>
             <tr>
-                <td><%= data[i].name%></td>
-                <td><%= data[i].pet_name%></td>
-                <td><%= data[i].startdate%></td>
-                <td><%= data[i].enddate%></td>
-                <td><%= data[i].amount%></td>
-				<% if (data[i].status == 1) { %>
-					<td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-amount="<%= data[i].amount%>">Enter Transaction Details</button></td>									
+				<% if (data[i].status != 2) { %>
+					<td><%= data[i].name%></td>
+					<td><%= data[i].pet_name%></td>
+					<td><%= data[i].startdate%></td>
+					<td><%= data[i].enddate%></td>
+					<td><%= data[i].amount%></td>
+					<% if (data[i].status == 1) { %>
+						<td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-amount="<%= data[i].amount%>">Enter Transaction Details</button></td>									
+					<% } %>
 				<% } %>
             </tr>
             <% } %>

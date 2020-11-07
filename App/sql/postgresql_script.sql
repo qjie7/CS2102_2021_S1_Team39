@@ -67,10 +67,10 @@ CREATE TABLE IF NOT EXISTS pet_owner_bids_for (
     pet_owner_email VARCHAR REFERENCES pet_owner(email),
     caretaker_email VARCHAR REFERENCES caretaker(email),
     pet_name        VARCHAR REFERENCES pets_own_by(pet_name),
-    startdate       DATE NOT NULL,
-    enddate         DATE NOT NULL,
+    startdate       DATE UNIQUE NOT NULL,
+    enddate         DATE UNIQUE NOT NULL,
     amount          NUMERIC NOT NULL,
-	status			BIT DEFAULT 0::BIT NOT NULL,
+	status			INTEGER DEFAULT 0 NOT NULL,
     PRIMARY KEY (pet_owner_email, caretaker_email, pet_name, startdate, enddate),
     CHECK(startdate <= enddate)
 );

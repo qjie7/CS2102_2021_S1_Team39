@@ -796,7 +796,7 @@ app.post(
 		});
     } else {
       pool.query(
-        `UPDATE pet_owner_bids_for SET status = 1::BIT WHERE pet_owner_email = $1`, [petowner_email],
+        `UPDATE pet_owner_bids_for SET status = 1 WHERE pet_owner_email = $1 AND caretaker_email = $2 AND pet_name = $3 AND startdate = $4 AND enddate = $5`, [petowner_email, caretaker_email, pet_name, start_date, end_date],
         (err, results) => {
           if (err) {
             throw err;
@@ -841,22 +841,29 @@ app.post(
 		});
     } else {
       pool.query(
-        `INSERT INTO pets_taken_care_by (pet_owner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from)
-          VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
-          `,
-        [petowner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from],
-        (err, results) => {
-          if (err) {
-            throw err;
-          }
-          console.log(results.rows);
-          req.flash(
-            "success_msg",
-            "You successfully confirmed transaction details"
-          );
-          res.redirect("/pet_owner_home");
-        }
-      );
+        `UPDATE pet_owner_bids_for SET status = 2 WHERE pet_owner_email = $1 AND caretaker_email = $3 AND pet_name = $2 AND startdate = $4 AND enddate = $5          
+		`,
+		[petowner_email, pet_name, caretaker_email, start_date, end_date],
+		(err, results) =>{			
+		  pool.query(
+			`INSERT INTO pets_taken_care_by (pet_owner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from)
+				VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)		
+			`,       
+			[petowner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from],
+			(err, results) => {
+			  if (err) {
+				throw err;
+			  }
+			  console.log(results.rows);
+			  req.flash(
+				"success_msg",
+				"You successfully confirmed transaction details"
+			  );
+			  res.redirect("/pet_owner_home");
+			}
+		  )		  
+		}
+	  );	  	      
     }
 
   }
