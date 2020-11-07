@@ -24,9 +24,11 @@
 
 <body>
 
-    <a href="/logout">Logout</a>
-    <a href="/caretaker_bids">Accept bid requests</a>
+    <a href="/logout">Logout</a>	
+	<a href="/caretaker_bids">Accept Bid Requests</a>
+	
     <h3>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h3>
+	
     <form action="/caretaker_home/charge" method="POST">
         <select name="select_category" id="select_category">
             <% for(var i=0; i<all_category.length; i++) { %>
@@ -34,7 +36,7 @@
             <% } %>
         </select>
         <!-- <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required /> -->
-        <% if (caretaker_type == 'part_time') { %>
+        <% if (caretaker_type == "part_time") { %>
             <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
         <% } %>
         <div>

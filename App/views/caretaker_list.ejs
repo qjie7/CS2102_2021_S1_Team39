@@ -41,12 +41,15 @@
             <% for(var i=0; i<data.length; i++) { %>
             <tr>
                 <td><%= data[i].name%></td>
-
                 <td><%= data[i].category_name%></td>
                 <td><%= data[i].start_date%></td>
                 <td><%= data[i].end_date%></td>
                 <td><%= data[i].amount%></td>
-                <td><button type="button" data-toggle="modal" data-target="#bidModal" data-start_date="<%= startDate%>" data-end_date="<%= endDate%>" data-petowner_email="<%= userEmail%>" data-pet_name="<%= petName%>" data-pet_category="<%= petCategory%>" data-pet_requirements="<%= petRequirements%>"  data-caretaker_email="<%= data[i].caretaker_email %>" data-caretaker_name="<%= data[i].name %>">Bid</button></td>
+				<% if(data[i].type == "full_time") { %>
+					<td><button type="button" data-toggle="modal" data-target="#bookModal" data-startdate="<%= startDate%>" data-enddate="<%= endDate%>" data-pet_owner_email="<%= userEmail%>" data-petname="<%= petName%>" data-petcategory="<%= petCategory%>" data-petrequirements="<%= petRequirements%>"  data-care_taker_email="<%= data[i].caretaker_email %>" data-care_taker_name="<%= data[i].name %>" data-amount="<%= data[i].amount %>">Book</button></td>
+				<% } else { %>							
+					<td><button type="button" data-toggle="modal" data-target="#bidModal" data-start_date="<%= startDate%>" data-end_date="<%= endDate%>" data-petowner_email="<%= userEmail%>" data-pet_name="<%= petName%>" data-pet_category="<%= petCategory%>" data-pet_requirements="<%= petRequirements%>"  data-caretaker_email="<%= data[i].caretaker_email %>" data-caretaker_name="<%= data[i].name %>">Bid</button></td>
+				<% } %>
             </tr>
             <% } %>
         </tbody>
@@ -61,32 +64,32 @@
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
-      </div>
-                <form action="/caretaker_list/bid" method="POST">
+      </div>               			  
+	  <form action="/caretaker_list/bid" method="POST">
       <div class="modal-body">
 
           <div class="form-group">
-            <label for="caretaker_name" class="col-form-label">Caretaker name:</label>
+            <label for="caretaker_name" class="col-form-label">Caretaker Name</label>
             <input type="text" class="form-control" id="caretaker_name" name="caretaker_name" readonly>
           </div>
 
           <div class="form-group">
-            <label for="caretaker-email" class="col-form-label">Caretaker email:</label>
+            <label for="caretaker-email" class="col-form-label">Caretaker Email</label>
             <input type="text" class="form-control" id="caretaker_email"  name="caretaker_email" readonly>
           </div>
 
           <div class="form-group">
-            <label for="petowner_email" class="col-form-label">Your email:</label>
+            <label for="petowner_email" class="col-form-label">Your Email</label>
             <input type="text" class="form-control" id="petowner_email"  name="petowner_email" readonly>
           </div>
 
           <div class="form-group">
-            <label for="pet_name" class="col-form-label">Pet name:</label>
+            <label for="pet_name" class="col-form-label">Pet Name</label>
             <input type="text" class="form-control" id="pet_name"  name="pet_name" readonly>
           </div>
 
           <div class="form-group">
-            <label for="pet_category" class="col-form-label">Pet category:</label>
+            <label for="pet_category" class="col-form-label">Pet Category</label>
             <input type="text" class="form-control" id="pet_category"  name="pet_category" readonly>
           </div>
 
@@ -102,16 +105,108 @@
           </div>
 
           <div class="form-group">
-            <label for="bid_amount" class="col-form-label">Your bid: </label>
+            <label for="bid_amount" class="col-form-label">Your Bid: </label>
             <input type="number" class="form-control" id="bid_amount" name="bid_amount" required></input>
           </div>
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
-		<input type="submit" value="Search" />
+		<input type="submit" value="Confirm" />
       </div>
-            </form>
+	  </form>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="bookModalLabel">Book</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+	  <form action="/caretaker_list/book" method="POST">
+      <div class="modal-body">
+
+          <div class="form-group">
+            <label for="care_taker_name" class="col-form-label">Caretaker Name</label>
+            <input type="text" class="form-control" id="care_taker_name" name="care_taker_name" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="care_taker-email" class="col-form-label">Caretaker Email</label>
+            <input type="text" class="form-control" id="care_taker_email"  name="care_taker_email" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="pet_owner_email" class="col-form-label">Your Email</label>
+            <input type="text" class="form-control" id="pet_owner_email"  name="pet_owner_email" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="petname" class="col-form-label">Pet Name</label>
+            <input type="text" class="form-control" id="petname"  name="petname" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="petcategory" class="col-form-label">Pet Category</label>
+            <input type="text" class="form-control" id="petcategory"  name="petcategory" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="petrequirements" class="col-form-label">Special Requirements</label>
+            <input type="text" class="form-control" id="petrequirements"  name="petrequirements" readonly>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label">Date</label>
+            <input type="text" class="form-control" id="startdate"  name="startdate" readonly>
+            <input type="text" class="form-control" id="enddate"  name="enddate" readonly>
+          </div>
+
+          <div class="form-group">
+            <label for="amount" class="col-form-label">Amount</label>
+            <input type="number" class="form-control" id="amount" name="amount" readonly></input>
+          </div>
+		  
+		  <div class="form-group">
+            <label for="payment_method" class="col-form-label">Payment Method</label>
+			 <select name="payment_method" id="payment_method" required>
+                <option value="Credit Card">Credit Card</option>
+                <option value="Cash">Cash</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+            </select>
+          </div>
+		  
+		  <div class="form-group">
+            <label for="method_to" class="col-form-label">Method of Transfer To</label>
+			 <select name="method_to" id="method_to" required> 
+                <option value="Pet Owner deliver">Pet Owner deliver</option>
+                <option value="Care Taker pick up">Care Taker pick up</option>
+                <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
+            </select>
+          </div>
+		  
+		  <div class="form-group">
+            <label for="method_from" class="col-form-label">Method of Transfer From</label>
+			 <select name="method_from" id="method_from" required>
+                <option value="Pet Owner deliver">Pet Owner deliver</option>
+                <option value="Care Taker pick up">Care Taker pick up</option>
+                <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
+            </select>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
+		<input type="submit" value="Confirm" />
+      </div>
+	  </form>
     </div>
   </div>
 </div>
@@ -125,6 +220,7 @@
     alert(name);
   }
 
+  // bid modal for part-time caretaker
   $('#bidModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
   var caretaker_name = button.data('caretaker_name');
@@ -147,6 +243,40 @@
   $('#pet_requirements').val(pet_requirements)
   $('#start_date').val(start_date)
   $('#end_date').val(end_date)
+  
+  })
+  
+  // book modal for full-time caretaker
+  $('#bookModal').on('show.bs.modal', function (event) {
+  var button = $(event.relatedTarget); // Button that triggered the modal
+  var care_taker_name = button.data('care_taker_name');
+  var care_taker_email = button.data('care_taker_email');
+  var pet_owner_email = button.data('pet_owner_email');
+  var petname = button.data('petname');
+  var petcategory = button.data('petcategory');
+  var petrequirements = button.data('petrequirements');
+  var startdate = button.data('startdate');
+  var enddate = button.data('enddate');
+  var amount = button.data('amount');
+  var payment_method = button.data('payment_method');
+  var method_to = button.data('method_to');
+  var method_from = button.data('method_from');
+
+  var modal = $(this);
+  modal.find('.modal-title').text('New booking for ' + care_taker_name);
+
+  $('#care_taker_name').val(care_taker_name)
+  $('#care_taker_email').val(care_taker_email)
+  $('#pet_owner_email').val(pet_owner_email)
+  $('#petname').val(petname)
+  $('#petcategory').val(petcategory)
+  $('#petrequirements').val(petrequirements)
+  $('#startdate').val(startdate)
+  $('#enddate').val(enddate)
+  $('#amount').val(amount)
+  $('#payment_method').val(payment_method)
+  $('#method_to').val(method_to)
+  $('#method_from').val(method_from)
   
   })
 </script>

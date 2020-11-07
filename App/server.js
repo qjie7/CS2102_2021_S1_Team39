@@ -709,7 +709,7 @@ app.post(
   }
 )
 
-// pet owner bids for a caretaker
+// pet owner bids for a part-time caretaker
 app.post(
   "/caretaker_list/bid", async (req, res) => {	 
     let {petowner_email} = req.body;
@@ -722,7 +722,6 @@ app.post(
     let errors = [];
 
     console.log("print bid", petowner_email);
-
 
     if (errors.length > 0) {
       pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {
@@ -769,9 +768,66 @@ app.post(
           // res.redirect("/pet_owner_home");
         }
       );
-    }
-    
+    }    
+  }
+)
 
+// pet owner books a full-time caretaker
+app.post(
+  "/caretaker_list/book", async (req, res) => {	 
+    let {pet_owner_email} = req.body;
+    let {care_taker_email} = req.body;
+    let {petname} = req.body;
+    let {startdate} = req.body;
+    let {enddate} = req.body;
+    let {amount} = req.body;
+	let {payment_method} = req.body;
+	let {method_to} = req.body;
+	let {method_from} = req.body;
+
+    let errors = [];
+
+    console.log("print book", pet_owner_email);
+
+    if (errors.length > 0) {
+      pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[pet_owner_email], (err, data) => {
+        let all_pet_data = data;
+          res.render('caretaker_search', { title: 'Care Taker', all_pet: all_pet_data.rows, user: req.user.name});
+      });
+    } else {
+		pool.query(
+        `INSERT INTO pet_owner_bids_for (pet_owner_email, caretaker_email, pet_name, startdate, enddate, amount, status)
+          VALUES ($1, $2, $3, $4, $5, $6, 2)
+          `,
+        [pet_owner_email, care_taker_email, petname, startdate, enddate, amount],
+		(err, results) => {
+			if (err) {
+				throw err;					 
+			}
+			console.log("result", results.rows);
+			if (results.rows.length > 0) {
+				req.flash(
+				"success_msg",						 
+				"You successfully booked the caretaker"
+				);
+			} else {
+				req.flash(
+				"error_msg",
+				"Invalid bid selection. It has already been taken care."
+				)
+			}
+						 
+			pool.query(
+				`INSERT INTO pets_taken_care_by (pet_owner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from)
+				  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+				  `,
+				[pet_owner_email, petname, care_taker_email, startdate, enddate, payment_method, amount, method_to, method_from],
+				(err, results) => {
+					res.redirect("/caretaker_search"); 
+				}
+			  )
+		});
+    }    
   }
 )
 
