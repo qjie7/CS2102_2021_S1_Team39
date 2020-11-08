@@ -25,31 +25,50 @@
 <body>
 
     <a href="/logout">Logout</a>
-      <a href="/caretaker_search">Back to search</a>
-
+    <a href="/caretaker_search">Back to search</a>
+    <h4>Part-time Caretaker</h4>
     <table class="table">
         <thead>
             <tr>
 				<th scope="col">Caretaker Name</th>
                 <th scope="col">For</th>
-                <th scope="col">Available From</th>
-                <th scope="col">Available Till</th>
+                <th scope="col">Ratings</th>
                 <th scope="col">Price per day</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
-            <% for(var i=0; i<data.length; i++) { %>
+            <% for(var i=0; i<part_time_data.length; i++) { %>
             <tr>
-                <td><%= data[i].name%></td>
-                <td><%= data[i].category_name%></td>
-                <td><%= data[i].start_date%></td>
-                <td><%= data[i].end_date%></td>
-                <td><%= data[i].amount%></td>
-				<% if(data[i].type == "full_time") { %>
-					<td><button type="button" data-toggle="modal" data-target="#bookModal" data-startdate="<%= startDate%>" data-enddate="<%= endDate%>" data-pet_owner_email="<%= userEmail%>" data-petname="<%= petName%>" data-petcategory="<%= petCategory%>" data-petrequirements="<%= petRequirements%>"  data-care_taker_email="<%= data[i].caretaker_email %>" data-care_taker_name="<%= data[i].name %>" data-amount="<%= data[i].amount %>">Book</button></td>
-				<% } else { %>							
-					<td><button type="button" data-toggle="modal" data-target="#bidModal" data-start_date="<%= startDate%>" data-end_date="<%= endDate%>" data-petowner_email="<%= userEmail%>" data-pet_name="<%= petName%>" data-pet_category="<%= petCategory%>" data-pet_requirements="<%= petRequirements%>"  data-caretaker_email="<%= data[i].caretaker_email %>" data-caretaker_name="<%= data[i].name %>">Bid</button></td>
-				<% } %>
+                <td><%= part_time_data[i].name%></td>
+                <td><%= part_time_data[i].category_name%></td>
+                <td><%= part_time_data[i].overall_rating%></td>
+                <td><%= part_time_data[i].amount%></td>
+                <td><button type="button" data-toggle="modal" data-target="#bidModal" data-start_date="<%= startDate%>" data-end_date="<%= endDate%>" data-petowner_email="<%= userEmail%>" data-pet_name="<%= petName%>" data-pet_category="<%= petCategory%>" data-pet_requirements="<%= petRequirements%>"  data-caretaker_email="<%= part_time_data[i].caretaker_email %>" data-caretaker_name="<%= part_time_data[i].name %>">Bid</button></td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <h4>Full-time Caretaker</h4>
+    <table class="table">
+        <thead>
+            <tr>
+				<th scope="col">Caretaker Name</th>
+                <th scope="col">For</th>
+                <th scope="col">Ratings</th>
+                <th scope="col">Price per day</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(var i=0; i<full_time_data.length; i++) { %>
+            <tr>
+                <td><%= full_time_data[i].name%></td>
+                <td><%= full_time_data[i].category_name%></td>
+                <td><%= full_time_data[i].overall_rating%></td>
+                <td><%= full_time_data[i].amount%></td>
+                <td><button type="button" data-toggle="modal" data-target="#bookModal" data-startdate="<%= startDate%>" data-enddate="<%= endDate%>" data-pet_owner_email="<%= userEmail%>" data-petname="<%= petName%>" data-petcategory="<%= petCategory%>" data-petrequirements="<%= petRequirements%>"  data-care_taker_email="<%= full_time_data[i].caretaker_email %>" data-care_taker_name="<%= full_time_data[i].name %>"  data-amount="<%= full_time_data[i].amount%>">Book</button></td>
             </tr>
             <% } %>
         </tbody>

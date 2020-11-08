@@ -680,7 +680,7 @@ app.post(
     if (!select_category) {
       errors.push({ message: "Please enter the category" });
     }
-	
+
     if (!start_date || !end_date) {
       errors.push({ message: "Please enter all fields" });
     }
@@ -688,22 +688,33 @@ app.post(
     if (start_date >= end_date) {
       errors.push({ message: "Invalid Date! Please check you date input" });
     }
-	
+
     if (errors.length > 0) {
       pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[email], (err, data) => {
         let all_pet_data = data;
           res.render('caretaker_search', { errors: errors, title: 'Care Taker', all_pet: all_pet_data.rows, user: req.user.name});
       });
     } else {
-      pool.query(       
-                 `SELECT * 
-                  FROM ((caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email) 
+      pool.query(
+                 `SELECT *
+                  FROM ((caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email)
                   INNER JOIN caretaker_has_availability ca ON c.email = ca.caretaker_email)
-                  WHERE cc.category_name = $1 AND ca.start_date <= $2 AND ca.end_date >= $3`, 
+                  WHERE c.type = 'part_time' AND cc.category_name = $1 AND ca.start_date <= $2 AND ca.end_date >= $3`,
                   [select_category, start_date, end_date], (err, data) => {
-                    if (err) throw err;
-                    console.log(data.rows);
-        res.render('caretaker_list', { title: 'Caretaker List', data: data.rows, user: req.user.name, userEmail: email, petName: select_name, petCategory: select_category, petRequirements: select_requirements,  startDate: start_date, endDate:end_date});
+                  let part_time_data = data;
+
+                  pool.query(
+                             `SELECT * FROM (caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email)
+                              WHERE c.type = 'full_time' AND cc.category_name = $1 AND c.email NOT IN
+                             (SELECT DISTINCT c.email
+                              FROM ((caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email)
+                              INNER JOIN full_time_takes_leave ft ON c.email = ft.caretaker_email)
+                              WHERE c.type = 'full_time' AND cc.category_name = $1 AND ft.start_date <= $2 AND ft.end_date >= $3)`,
+                              [select_category, start_date, end_date], (err, data) => {
+                              let full_time_data = data;
+
+        res.render('caretaker_list', { title: 'Caretaker List', part_time_data: part_time_data.rows, full_time_data: full_time_data.rows, user: req.user.name, userEmail: email, petName: select_name, petCategory: select_category, petRequirements: select_requirements,  startDate: start_date, endDate:end_date});
+      });
       });
     }
   }
