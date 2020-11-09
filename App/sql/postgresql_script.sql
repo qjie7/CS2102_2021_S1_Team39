@@ -177,3 +177,43 @@ CREATE TRIGGER
 check_being_taken_care
 BEFORE INSERT OR UPDATE ON pet_owner_bids_for
 FOR EACH ROW EXECUTE PROCEDURE being_taken_care();
+
+CREATE OR REPLACE FUNCTION
+    pet_limit() RETURNS TRIGGER AS
+    $$ DECLARE ct NUMERIC;
+        BEGIN 
+            SELECT COUNT(*) INTO ct FROM pets_owner_bids_for pobf
+            WHERE NEW.caretaker_email = pobf.caretaker_email AND pobf.status = 1 AND NEW.status = 1
+            AND ((NEW.startdate <= pobf.startdate and NEW.enddate >= pobf.startdate) or
+				 (NEW.startdate <= pobf.enddate and NEW.enddate >= pobf.enddate) or 
+				 (NEW.startdate >= pobf.startDate and NEW.enddate <= pobf.endDate));
+            IF ct >= 5 THEN 
+                RETURN NULL;
+            ELSE 
+                RETURN NEW;  
+            END IF;
+            END; $$
+    LANGUAGE plpgsql;
+
+CREATE TRIGGER
+check_pet_limit
+BEFORE UPDATE ON pet_owner_bids_for
+FOR EACH ROW EXECUTE PROCEDURE pet_limit();
+
+CREATE OR REPLACE PROCEDURE caretaker_overall_rating(input_petowner_email VARCHAR, input_pet_name VARCHAR, input_caretaker_email VARCHAR) as
+$$ DECLARE 
+  averageRating NUMERIC;
+  caretaker_type VARCHAR;
+  category VARCHAR;
+  originalCharge NUMERIC;
+  begin
+    SELECT type FROM caretaker INTO caretaker_type WHERE email = input_caretaker_email;
+    SELECT AVG(rating_stars) FROM pets_taken_care_by INTO averageRating WHERE caretaker_email = input_caretaker_email;
+  IF caretaker_type = 'full_time' THEN
+    SELECT category_name FROM pets_own_by INTO category WHERE pet_owner_email = input_petowner_email AND pet_name = input_pet_name;
+    SELECT basic_charge FROM pet_category INTO originalCharge WHERE category_name = category;
+    UPDATE caretaker_has_charge SET amount = originalCharge * (1 + averageRating/5) WHERE caretaker_email = input_caretaker_email AND category_name = category;
+  END IF;
+  UPDATE caretaker SET overall_rating = averageRating WHERE email = input_caretaker_email;
+END; $$
+language plpgsql; 

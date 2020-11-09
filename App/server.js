@@ -968,6 +968,14 @@ app.post(
             throw err;
           }
           console.log(results.rows);
+          pool.query(
+            `CALL caretaker_overall_rating($1, $2, $3)`,
+            [petowner_email, petname, care_taker_email], (err, results) => {	
+              if (err) {
+                throw err;
+              }
+            }
+          );
           req.flash(
             "success_msg",
             "You successfully confirmed rating details"
