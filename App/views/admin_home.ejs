@@ -1,176 +1,215 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" href="image/favicon.png" type="image/png">
+        <title>Pet Care Home</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="vendors/linericon/style.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+        <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
+        <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
+        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+        <!-- main css -->
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+    </head>
 
-<head>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
+    <body>
+        <!--================Header Area =================-->
+        <header class="header_area">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <a class="navbar-brand logo_h" href="/"><img src="image/Logo.png" alt=""></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav menu_nav ml-auto">
+                            <li class="nav-item active"><a class="nav-link" href="/admin_home">Home</a></li> 
+                            <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
+                        </ul>
+                    </div> 
+                </nav>
+            </div>
+        </header>
+        <!--================Header Area =================-->
 
-    <title>Pet Home</title>
+        <!--================Breadcrumb Area =================-->
+        <section class="breadcrumb_area">
+            <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+            <div class="container">
+                <div class="page-cover text-center">
+                    <h2 class="page-cover-tittle">Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h2>
+                </div>
+            </div>
+        </section>
+        <!--================Breadcrumb Area =================-->
 
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-
-</head>
-
-<body id="page-top">
-    <div id="wrapper">
-        <!-- Topbar -->
-        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-            <ul class="navbar-nav ml-auto">
-                <!-- Nav Item - User Information -->
-                <li class="nav-item dropdown no-arrow">
-                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
-                        <span
-                            class="mr-2 d-none d-lg-inline text-gray-600 small"><%= user.charAt(0).toUpperCase() + user.slice(1) %></span>
-                        <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
-                    </a>
-                    <!-- Dropdown - User Information -->
-                    <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                        aria-labelledby="userDropdown">
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+        <!--================ Pet Categories Area  =================-->
+        <section class="testimonial_area section_gap">
+            <div class="container">
+                <div class="section_title text-center">
+                    <h2 class="title_color">Pet Categories</h2>
+                </div>
+                <div class="card shadow mb-4">
+                    <div class="card-header py-3">
+                        <a href="#" data-toggle="modal" data-target="#addCategoryModal">
                             <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                            Logout
+                            Add category
                         </a>
                     </div>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="container-fluid">
-            <!-- DataTales Example -->
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Pet Categories</h6>
-                    <a href="#" data-toggle="modal" data-target="#addCategoryModal">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Add category
-                    </a>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Category</th>
-                                    <th>Basic charge</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for(var i=0; i<all_category.length; i++) { %>
-                                <tr>
-                                    <td><%= all_category[i].category_name%></td>
-                                    <td><%= all_category[i].basic_charge%></td>
-                                </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
+                    <!-- DataTales Example -->
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Category</th>
+                                        <th>Basic charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for(var i=0; i<all_category.length; i++) { %>
+                                    <tr>
+                                        <td><%= all_category[i].category_name%></td>
+                                        <td><%= all_category[i].basic_charge%></td>
+                                    </tr>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+        <!--================ Pet Categories Area  =================-->
 
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
-    </a>
+        <!--================ Salary Area  =================-->
+        <section class="salary_area section_gap">
+            <div class="container">
+                <div class="section_title text-center">
+                    <h2 class="title_color">Salary</h2>
+                </div>
+                <div>
+                    <form action="/admin_home/salary" method="POST">
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="year">Year</label>
+                                <input class="form-control" type="number" id="year" name="year" required>
+                            </div>
+                            <div class="form-group col">
+                                <label for="month">Month</label>
+                                <input class="form-control" type="number" id="month" name="month" min=1 max=12 required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <input class="btn btn-primary" type="submit" value="Issue Salary" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div>
+                    <ul>
+                        <% if(messages.success_msg) { %>
+                        <li><%= messages.success_msg %></li>
+                        <% } %>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        <!--================ Salary Area  =================-->
 
-    <!-- Logout Modal-->
-    <form action="/admin_home/category" method="POST">
-        <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <!-- Add Category Modal-->
+        <form action="/admin_home/category" method="POST">
+            <div class="modal fade" id="addCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Add a new category?</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col">
+                                    <input class="form-control" type="text" id="category_name" name="category_name"
+                                        placeholder="Category" required />
+                                </div>
+                                <div class="col">
+                                    <input class="form-control" type="text" id="basic_charge" name="basic_charge"
+                                        placeholder="Basic charge (S$)" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input class="btn btn-primary" type="submit" value="Add Category" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Add a new category?</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <div class="col">
-                                <input class="form-control" type="text" id="category_name" name="category_name"
-                                    placeholder="Category" required />
-                            </div>
-                            <div class="col">
-                                <input class="form-control" type="text" id="basic_charge" name="basic_charge"
-                                    placeholder="Basic charge (S$)" required />
-                            </div>
-                        </div>
-                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                     <div class="modal-footer">
-                        <input class="btn btn-primary" type="submit" value="Add Category" />
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="/logout">Logout</a>
                     </div>
                 </div>
             </div>
         </div>
-    </form>
+        
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="/logout">Logout</a>
-                </div>
+        <!--================ start footer Area  =================-->	
+        <footer class="footer-area section_gap">
+            <div class="container">
+            <div class="border_line"></div>
+            <div class="row footer-bottom d-flex justify-content-between align-items-center">
+                <p class="col-lg-8 col-sm-12 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
             </div>
-        </div>
-    </div>
-    
-    <ul>
-        <% if(messages.success_msg) { %>
-        <li><%= messages.success_msg %></li>
-        <% } %>
-    </ul>
-    <form action="/admin_home/salary" method="POST">
-        <div>
-            <span>Year</span>
-            <input type="number" id="year" name="year" required>
-            <span>Month</span>
-            <input type="number" id="month" name="month" min=1 max=12 required>
-        </div>
-        <div>
-            <input type="submit" value="Issue Salary" />
-        </div>
-    </form>
+            </div>
+        </footer>
+        <!--================ End footer Area  =================-->
 
-    <!-- Bootstrap core JavaScript-->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Core plugin JavaScript-->
-    <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
-
-    <!-- Custom scripts for all pages-->
-    <script src="js/sb-admin-2.min.js"></script>
- 
-    <!-- Page level plugins -->
-    <!-- <script src="vendor/chart.js/Chart.min.js"></script> -->
-
-    <!-- Page level custom scripts -->
-    <!-- <script src="js/demo/chart-area-demo.js"></script>
-        <script src="js/demo/chart-pie-demo.js"></script> -->
-</body>
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+        <script src="js/jquery.ajaxchimp.min.js"></script>
+        <script src="js/mail-script.js"></script>
+        <script src="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="vendors/nice-select/js/jquery.nice-select.js"></script>
+        <script src="js/mail-script.js"></script>
+        <script src="js/stellar.js"></script>
+        <script src="vendors/lightbox/simpleLightbox.min.js"></script>
+        <script src="js/custom.js"></script>
+    </body>
 
 </html>

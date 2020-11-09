@@ -1,162 +1,335 @@
 <!DOCTYPE html>
-<html>
-
-<head>
-    <!-- Page Title -->
-    <title>CS2102</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-
-    <!-- CSS for Styling -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
-    <!-- JavaScript for Interactivity -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
-</head>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" href="image/favicon.png" type="image/png">
+        <title>Pet Care Home</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="vendors/linericon/style.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+        <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
+        <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
+        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+        <!-- main css -->
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+    </head>
 
 <body>
+    <!--================Header Area =================-->
+    <header class="header_area">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <a class="navbar-brand logo_h" href="/"><img src="image/Logo.png" alt=""></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                    <ul class="nav navbar-nav menu_nav ml-auto">
+                        <li class="nav-item active"><a class="nav-link" href="/caretaker_home">Home</a></li> 
+                        <li class="nav-item"><a class="nav-link" href="/caretaker_bids">Accept Bid Requests</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
+                    </ul>
+                </div> 
+            </nav>
+        </div>
+    </header>
+    <!--================Header Area =================-->
 
-    <a href="/logout">Logout</a>	
-	<a href="/caretaker_bids">Accept Bid Requests</a>
-	
-    <h3>Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h3>
-	
+    <!--================Breadcrumb Area =================-->
+    <section class="breadcrumb_area">
+        <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+        <div class="container">
+            <div class="page-cover text-center">
+                <h2 class="page-cover-tittle">Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h2>
+            </div>
+        </div>
+    </section>
+    <!--================Breadcrumb Area =================-->
+
+    <!--================ Charge Area  =================-->
+    <section class="testimonial_area section_gap">
+        <div class="container">
+            <div class="section_title text-center">
+                <h2 class="title_color">Add Charges</h2>
+            </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <form action="/caretaker_home/charge" method="POST">
+                        <div class="row">
+                            <div class="form-group col">
+                                <select class="form-control" name="select_category" id="select_category">
+                                    <% for(var i=0; i<all_category.length; i++) { %>
+                                    <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="form-group col">
+                                <% if (caretaker_type == "part_time") { %>
+                                    <input class="form-control" type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
+                                <% } %>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <input class="btn btn-primary" type="submit" value="Add Charge" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <!-- DataTales Example -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Pet Category</th>
+                                    <th>Daily Charge</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(var i=0; i<charge.length; i++) { %>
+                                    <tr>
+                                        <td><%= charge[i].category_name%></td>
+                                        <td><%= charge[i].amount%></td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================ Charge Area  =================-->
+
+    <!--================ Availbality Area  =================-->
+    <section class="salary_area section_gap">
+        <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background="">  
+        </div>
+        <div class="container">
+            <div class="section_title text-center">
+                <h2 class="title_color">Declare availbality</h2>
+            </div>
+            <div>
+                <ul>
+                    <% if(messages.available_success_msg) { %>
+                    <li><%= messages.available_success_msg %></li>
+                    <% } %>
+                </ul>
+            
+                <ul>
+                    <% if (messages.available_error) { %>
+                    <li><%= messages.available_error %></li>
+                    <% } %>
+                </ul>
+            </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <form action="/caretaker_home/availability" method="POST">
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="startDate">Start Date</label>
+                                <input class="form-control" type="date" id="start_date" name="start_date" required>
+                            </div>
+                            <div class="form-group col">
+                                <label for="endDate">End Date</label>
+                                <input class="form-control" type="date" id="end_date" name="end_date" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <input class="btn btn-primary" type="submit" value="Add Availablity" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- DataTales Example -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(var i=0; i<availability.length; i++) { %>
+                                    <tr>
+                                        <td><%= availability[i].start_date.toDateString()%></td>
+                                        <td><%= availability[i].end_date.toDateString()%></td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================ Availbality Area  =================-->
+
+    <!--================ Declare Leave Area  =================-->
+    <section class="testimonial_area section_gap">
+        <div class="container">
+            <div class="section_title text-center">
+                <h2 class="title_color">Declare leaves</h2>
+            </div>
+            <div>
+                <ul>
+                    <% if(messages.success_msg) { %>
+                    <li><%= messages.success_msg %></li>
+                    <% } %>
+                </ul>
+            
+                <ul>
+                    <% if (messages.error) { %>
+                    <li><%= messages.error %></li>
+                    <% } %>
+                </ul>
+                <ul>
+                    <% if (messages.date_error) { %>
+                    <li><%= messages.date_error %></li>
+                    <% } %>
+                </ul>
+            </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <form action="/caretaker_home/takeleaves" method="POST">
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="startDate">Start Date</label>
+                                <input class="form-control" type="date" id="start_date" name="start_date" required>
+                            </div>
+                            <div class="form-group col">
+                                <label for="endDate">End Date</label>
+                                <input class="form-control" type="date" id="end_date" name="end_date" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <input class="btn btn-primary" type="submit" value="Take leave" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-body">
+                    <!-- DataTales Example -->
+                    <div class="table-responsive">
+                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Start Date</th>
+                                    <th>End Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(var i=0; i<leave.length; i++) { %>
+                                    <tr>
+                                        <td><%= leave[i].start_date.toDateString()%></td>
+                                        <td><%= leave[i].end_date.toDateString()%></td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--================ Declare Leave Area  =================-->
+
+    <!-- Add Charge Modal-->
     <form action="/caretaker_home/charge" method="POST">
-        <select name="select_category" id="select_category">
-            <% for(var i=0; i<all_category.length; i++) { %>
-            <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
-            <% } %>
-        </select>
-        <!-- <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required /> -->
-        <% if (caretaker_type == "part_time") { %>
-            <input type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
-        <% } %>
-        <div>
-            <input type="submit" value="Add Charge" />
+        <div class="modal fade" id="addChargeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Add a new category?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col">
+                                <select class="form-control" name="select_category" id="select_category">
+                                    <% for(var i=0; i<all_category.length; i++) { %>
+                                    <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <% if (caretaker_type == "part_time") { %>
+                                <div class="col">
+                                    <input class="form-control" type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn btn-primary" type="submit" value="Add Charge" />
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 
-    <p>Pet category that I can take care of.</p>
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Pet Category</th>
-                <th scope="col">Daily Charge</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for(var i=0; i<charge.length; i++) { %>
-            <tr>
-                <td><%= charge[i].category_name%></td>
-                <td><%= charge[i].amount%></td>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
-
-    </br>
-    <p>Declare your availbality.</p>
-
-    <ul>
-        <% if(messages.available_success_msg) { %>
-        <li><%= messages.available_success_msg %></li>
-        <% } %>
-    </ul>
-
-    <ul>
-        <% if (messages.available_error) { %>
-        <li><%= messages.available_error %></li>
-        <% } %>
-    </ul>
-
-    <form action="/caretaker_home/availability" method="POST">
-        <div>
-            <span>Start date</span>
-            <input type="date" id="start_date" name="start_date" required>
-            <input type="date" id="end_date" name="end_date" required>
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="/logout">Logout</a>
+                </div>
+            </div>
         </div>
-        <div>
-            <input type="submit" value="Add Availablity" />
+    </div>
+
+    <!--================ start footer Area  =================-->	
+    <footer class="footer-area section_gap">
+        <div class="container">
+        <div class="border_line"></div>
+        <div class="row footer-bottom d-flex justify-content-between align-items-center">
+            <p class="col-lg-8 col-sm-12 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
         </div>
-    </form>
-
-    <p>My availability.</p>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for(var i=0; i<availability.length; i++) { %>
-            <tr>
-                <td><%= availability[i].start_date.toDateString()%></td>
-                <td><%= availability[i].end_date.toDateString()%></td>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
-
-    </br>
-
-
-    <p>Declare your leaves</p>
-    <form action="/caretaker_home/takeleaves" method="POST">
-        <div>
-            <span>Start date</span>
-            <input type="date" id="start_date" name="start_date" required>
-            <span>End date</span>
-            <input type="date" id="end_date" name="end_date" required>
         </div>
-        <div>
-            <input type="submit" value="Take leave" />
-        </div>
-    </form>
+    </footer>
+    <!--================ End footer Area  =================-->
 
-    <ul>
-        <% if(messages.success_msg) { %>
-        <li><%= messages.success_msg %></li>
-        <% } %>
-    </ul>
-
-    <ul>
-        <% if (messages.error) { %>
-        <li><%= messages.error %></li>
-        <% } %>
-    </ul>
-    <ul>
-        <% if (messages.date_error) { %>
-        <li><%= messages.date_error %></li>
-        <% } %>
-    </ul>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for(var i=0; i<leave.length; i++) { %>
-            <tr>
-                <td><%= leave[i].start_date.toDateString()%></td>
-                <td><%= leave[i].end_date.toDateString()%></td>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
-
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="js/jquery.ajaxchimp.min.js"></script>
+    <script src="js/mail-script.js"></script>
+    <script src="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="vendors/nice-select/js/jquery.nice-select.js"></script>
+    <script src="js/mail-script.js"></script>
+    <script src="js/stellar.js"></script>
+    <script src="vendors/lightbox/simpleLightbox.min.js"></script>
+    <script src="js/custom.js"></script>
 </body>
 
 </html>

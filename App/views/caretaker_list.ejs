@@ -1,236 +1,336 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="image/favicon.png" type="image/png">
+    <title>Pet Care Home</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="vendors/linericon/style.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+  </head>
 
-<head>
-    <!-- Page Title -->
-    <title>CS2102</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-
-    <!-- CSS for Styling -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
-    <!-- JavaScript for Interactivity -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
-</head>
-
-<body>
-
-    <a href="/logout">Logout</a>
-    <a href="/caretaker_search">Back to search</a>
-    <h4>Part-time Caretaker</h4>
-    <table class="table">
-        <thead>
-            <tr>
-				<th scope="col">Caretaker Name</th>
-                <th scope="col">For</th>
-                <th scope="col">Ratings</th>
-                <th scope="col">Price per day</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for(var i=0; i<part_time_data.length; i++) { %>
-            <tr>
-                <td><%= part_time_data[i].name%></td>
-                <td><%= part_time_data[i].category_name%></td>
-                <td><%= part_time_data[i].overall_rating%></td>
-                <td><%= part_time_data[i].amount%></td>
-                <td><button type="button" data-toggle="modal" data-target="#bidModal" data-start_date="<%= startDate%>" data-end_date="<%= endDate%>" data-petowner_email="<%= userEmail%>" data-pet_name="<%= petName%>" data-pet_category="<%= petCategory%>" data-pet_requirements="<%= petRequirements%>"  data-caretaker_email="<%= part_time_data[i].caretaker_email %>" data-caretaker_name="<%= part_time_data[i].name %>">Bid</button></td>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
-
-    <h4>Full-time Caretaker</h4>
-    <table class="table">
-        <thead>
-            <tr>
-				<th scope="col">Caretaker Name</th>
-                <th scope="col">For</th>
-                <th scope="col">Ratings</th>
-                <th scope="col">Price per day</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for(var i=0; i<full_time_data.length; i++) { %>
-            <tr>
-                <td><%= full_time_data[i].name%></td>
-                <td><%= full_time_data[i].category_name%></td>
-                <td><%= full_time_data[i].overall_rating%></td>
-                <td><%= full_time_data[i].amount%></td>
-                <td><button type="button" data-toggle="modal" data-target="#bookModal" data-startdate="<%= startDate%>" data-enddate="<%= endDate%>" data-pet_owner_email="<%= userEmail%>" data-petname="<%= petName%>" data-petcategory="<%= petCategory%>" data-petrequirements="<%= petRequirements%>"  data-care_taker_email="<%= full_time_data[i].caretaker_email %>" data-care_taker_name="<%= full_time_data[i].name %>"  data-amount="<%= full_time_data[i].amount%>">Book</button></td>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
-
-
-<div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bidModalLabel">Bid</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>               			  
-	  <form action="/caretaker_list/bid" method="POST">
-      <div class="modal-body">
-
-          <div class="form-group">
-            <label for="caretaker_name" class="col-form-label">Caretaker Name</label>
-            <input type="text" class="form-control" id="caretaker_name" name="caretaker_name" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="caretaker-email" class="col-form-label">Caretaker Email</label>
-            <input type="text" class="form-control" id="caretaker_email"  name="caretaker_email" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="petowner_email" class="col-form-label">Your Email</label>
-            <input type="text" class="form-control" id="petowner_email"  name="petowner_email" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="pet_name" class="col-form-label">Pet Name</label>
-            <input type="text" class="form-control" id="pet_name"  name="pet_name" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="pet_category" class="col-form-label">Pet Category</label>
-            <input type="text" class="form-control" id="pet_category"  name="pet_category" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="pet_requirements" class="col-form-label">Special Requirements</label>
-            <input type="text" class="form-control" id="pet_requirements"  name="pet_requirements" readonly>
-          </div>
-
-          <div class="form-group">
-            <label class="col-form-label">Date</label>
-            <input type="text" class="form-control" id="start_date"  name="start_date" readonly>
-            <input type="text" class="form-control" id="end_date"  name="end_date" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="bid_amount" class="col-form-label">Your Bid: </label>
-            <input type="number" class="form-control" id="bid_amount" name="bid_amount" required></input>
-          </div>
-
+  <body>
+    <!--================Header Area =================-->
+    <header class="header_area">
+      <div class="container">
+          <nav class="navbar navbar-expand-lg navbar-light">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <a class="navbar-brand logo_h" href="/"><img src="image/Logo.png" alt=""></a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                  <ul class="nav navbar-nav menu_nav ml-auto">
+                      <li class="nav-item"><a class="nav-link" href="/pet_owner_home">Home</a></li> 
+                      <li class="nav-item active"><a class="nav-link" href="/caretaker_search">Search caretaker</a></li>
+                      <li class="nav-item"><a class="nav-link" href="/bids_list">View bids/transactions</a></li>
+                      <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
+                  </ul>
+              </div> 
+          </nav>
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
-		<input type="submit" value="Confirm" />
+    </header>
+    <!--================Header Area =================-->
+
+    <!--================Breadcrumb Area =================-->
+    <section class="breadcrumb_area">
+      <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+      <div class="container">
+          <div class="page-cover text-center">
+              <h2 class="page-cover-tittle">Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h2>
+          </div>
       </div>
-	  </form>
+    </section>
+    <!--================Breadcrumb Area =================-->
+
+    <!--================ Caretaker List Area  =================-->
+    <section class="testimonial_area section_gap">
+      <div class="container">
+        <div class="section_title text-center">
+            <h2 class="title_color">Part-time Caretaker</h2>
+        </div>
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <!-- DataTales Example -->
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Caretaker Name</th>
+                    <th>For</th>
+                    <th>Ratings</th>
+                    <th>Price per day</th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i<part_time_data.length; i++) { %>
+                    <tr>
+                        <td><%= part_time_data[i].name%></td>
+                        <td><%= part_time_data[i].category_name%></td>
+                        <td><%= part_time_data[i].overall_rating%></td>
+                        <td><%= part_time_data[i].amount%></td>
+                        <td><button type="button" data-toggle="modal" data-target="#bidModal" data-start_date="<%= startDate%>" data-end_date="<%= endDate%>" data-petowner_email="<%= userEmail%>" data-pet_name="<%= petName%>" data-pet_category="<%= petCategory%>" data-pet_requirements="<%= petRequirements%>"  data-caretaker_email="<%= part_time_data[i].caretaker_email %>" data-caretaker_name="<%= part_time_data[i].name %>">Bid</button></td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="section_title text-center">
+          <h2 class="title_color">Full-time Caretaker</h2>
+        </div>
+        <div class="card shadow mb-4">
+          <div class="card-body">
+            <!-- DataTales Example -->
+            <div class="table-responsive">
+              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                  <tr>
+                    <th>Caretaker Name</th>
+                    <th>For</th>
+                    <th>Ratings</th>
+                    <th>Price per day</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% for(var i=0; i<full_time_data.length; i++) { %>
+                    <tr>
+                        <td><%= full_time_data[i].name%></td>
+                        <td><%= full_time_data[i].category_name%></td>
+                        <td><%= full_time_data[i].overall_rating%></td>
+                        <td><%= full_time_data[i].amount%></td>
+                        <td><button type="button" data-toggle="modal" data-target="#bookModal" data-startdate="<%= startDate%>" data-enddate="<%= endDate%>" data-pet_owner_email="<%= userEmail%>" data-petname="<%= petName%>" data-petcategory="<%= petCategory%>" data-petrequirements="<%= petRequirements%>"  data-care_taker_email="<%= full_time_data[i].caretaker_email %>" data-care_taker_name="<%= full_time_data[i].name %>"  data-amount="<%= full_time_data[i].amount%>">Book</button></td>
+                    </tr>
+                  <% } %>
+                </tbody>
+              </table>
+            </div>  
+          </div>
+        </div>
+      </div>
+    </section>
+  <!--================ Caretaker List Area  =================-->
+
+    <div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bidModalLabel">Bid</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>               			  
+        <form action="/caretaker_list/bid" method="POST">
+          <div class="modal-body">
+
+              <div class="form-group">
+                <label for="caretaker_name" class="col-form-label">Caretaker Name</label>
+                <input type="text" class="form-control" id="caretaker_name" name="caretaker_name" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="caretaker-email" class="col-form-label">Caretaker Email</label>
+                <input type="text" class="form-control" id="caretaker_email"  name="caretaker_email" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="petowner_email" class="col-form-label">Your Email</label>
+                <input type="text" class="form-control" id="petowner_email"  name="petowner_email" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="pet_name" class="col-form-label">Pet Name</label>
+                <input type="text" class="form-control" id="pet_name"  name="pet_name" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="pet_category" class="col-form-label">Pet Category</label>
+                <input type="text" class="form-control" id="pet_category"  name="pet_category" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="pet_requirements" class="col-form-label">Special Requirements</label>
+                <input type="text" class="form-control" id="pet_requirements"  name="pet_requirements" readonly>
+              </div>
+
+              <div class="form-group">
+                <label class="col-form-label">Date</label>
+                <input type="text" class="form-control" id="start_date"  name="start_date" readonly>
+                <input type="text" class="form-control" id="end_date"  name="end_date" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="bid_amount" class="col-form-label">Your Bid: </label>
+                <input type="number" class="form-control" id="bid_amount" name="bid_amount" required></input>
+              </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
+        <input type="submit" value="Confirm" />
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bookModalLabel">Book</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <form action="/caretaker_list/book" method="POST">
+          <div class="modal-body">
+
+              <div class="form-group">
+                <label for="care_taker_name" class="col-form-label">Caretaker Name</label>
+                <input type="text" class="form-control" id="care_taker_name" name="care_taker_name" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="care_taker-email" class="col-form-label">Caretaker Email</label>
+                <input type="text" class="form-control" id="care_taker_email"  name="care_taker_email" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="pet_owner_email" class="col-form-label">Your Email</label>
+                <input type="text" class="form-control" id="pet_owner_email"  name="pet_owner_email" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="petname" class="col-form-label">Pet Name</label>
+                <input type="text" class="form-control" id="petname"  name="petname" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="petcategory" class="col-form-label">Pet Category</label>
+                <input type="text" class="form-control" id="petcategory"  name="petcategory" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="petrequirements" class="col-form-label">Special Requirements</label>
+                <input type="text" class="form-control" id="petrequirements"  name="petrequirements" readonly>
+              </div>
+
+              <div class="form-group">
+                <label class="col-form-label">Date</label>
+                <input type="text" class="form-control" id="startdate"  name="startdate" readonly>
+                <input type="text" class="form-control" id="enddate"  name="enddate" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="amount" class="col-form-label">Amount</label>
+                <input type="number" class="form-control" id="amount" name="amount" readonly></input>
+              </div>
+          
+          <div class="form-group">
+                <label for="payment_method" class="col-form-label">Payment Method</label>
+          <select name="payment_method" id="payment_method" required>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Bank Transfer">Bank Transfer</option>
+                </select>
+              </div>
+          
+          <div class="form-group">
+                <label for="method_to" class="col-form-label">Method of Transfer To</label>
+          <select name="method_to" id="method_to" required> 
+                    <option value="Pet Owner deliver">Pet Owner deliver</option>
+                    <option value="Care Taker pick up">Care Taker pick up</option>
+                    <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
+                </select>
+              </div>
+          
+          <div class="form-group">
+                <label for="method_from" class="col-form-label">Method of Transfer From</label>
+          <select name="method_from" id="method_from" required>
+                    <option value="Pet Owner deliver">Pet Owner deliver</option>
+                    <option value="Care Taker pick up">Care Taker pick up</option>
+                    <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
+                </select>
+              </div>
+
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
+        <input type="submit" value="Confirm" />
+          </div>
+        </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                <a class="btn btn-primary" href="/logout">Logout</a>
+            </div>
+        </div>
     </div>
   </div>
-</div>
+
+    <!--================ start footer Area  =================-->	
+    <footer class="footer-area section_gap">
+      <div class="container">
+      <div class="border_line"></div>
+      <div class="row footer-bottom d-flex justify-content-between align-items-center">
+          <p class="col-lg-8 col-sm-12 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+        </div>
+        </div>
+    </footer>
+    <!--================ End footer Area  =================-->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="js/jquery.ajaxchimp.min.js"></script>
+    <script src="js/mail-script.js"></script>
+    <script src="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="vendors/nice-select/js/jquery.nice-select.js"></script>
+    <script src="js/mail-script.js"></script>
+    <script src="js/stellar.js"></script>
+    <script src="vendors/lightbox/simpleLightbox.min.js"></script>
+    <script src="js/custom.js"></script>
+  </body>
 
 
-
-<div class="modal fade" id="bookModal" tabindex="-1" role="dialog" aria-labelledby="bookModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bookModalLabel">Book</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-	  <form action="/caretaker_list/book" method="POST">
-      <div class="modal-body">
-
-          <div class="form-group">
-            <label for="care_taker_name" class="col-form-label">Caretaker Name</label>
-            <input type="text" class="form-control" id="care_taker_name" name="care_taker_name" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="care_taker-email" class="col-form-label">Caretaker Email</label>
-            <input type="text" class="form-control" id="care_taker_email"  name="care_taker_email" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="pet_owner_email" class="col-form-label">Your Email</label>
-            <input type="text" class="form-control" id="pet_owner_email"  name="pet_owner_email" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="petname" class="col-form-label">Pet Name</label>
-            <input type="text" class="form-control" id="petname"  name="petname" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="petcategory" class="col-form-label">Pet Category</label>
-            <input type="text" class="form-control" id="petcategory"  name="petcategory" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="petrequirements" class="col-form-label">Special Requirements</label>
-            <input type="text" class="form-control" id="petrequirements"  name="petrequirements" readonly>
-          </div>
-
-          <div class="form-group">
-            <label class="col-form-label">Date</label>
-            <input type="text" class="form-control" id="startdate"  name="startdate" readonly>
-            <input type="text" class="form-control" id="enddate"  name="enddate" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="amount" class="col-form-label">Amount</label>
-            <input type="number" class="form-control" id="amount" name="amount" readonly></input>
-          </div>
-		  
-		  <div class="form-group">
-            <label for="payment_method" class="col-form-label">Payment Method</label>
-			 <select name="payment_method" id="payment_method" required>
-                <option value="Credit Card">Credit Card</option>
-                <option value="Cash">Cash</option>
-                <option value="Bank Transfer">Bank Transfer</option>
-            </select>
-          </div>
-		  
-		  <div class="form-group">
-            <label for="method_to" class="col-form-label">Method of Transfer To</label>
-			 <select name="method_to" id="method_to" required> 
-                <option value="Pet Owner deliver">Pet Owner deliver</option>
-                <option value="Care Taker pick up">Care Taker pick up</option>
-                <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
-            </select>
-          </div>
-		  
-		  <div class="form-group">
-            <label for="method_from" class="col-form-label">Method of Transfer From</label>
-			 <select name="method_from" id="method_from" required>
-                <option value="Pet Owner deliver">Pet Owner deliver</option>
-                <option value="Care Taker pick up">Care Taker pick up</option>
-                <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
-            </select>
-          </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
-		<input type="submit" value="Confirm" />
-      </div>
-	  </form>
-    </div>
-  </div>
-</div>
-
-</body>
 
 </html>
 

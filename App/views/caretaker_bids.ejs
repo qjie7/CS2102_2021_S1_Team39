@@ -1,123 +1,195 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="image/favicon.png" type="image/png">
+    <title>Pet Care Home</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="vendors/linericon/style.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+  </head>
 
-<head>
-    <!-- Page Title -->
-    <title>CS2102</title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-
-    <!-- CSS for Styling -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
-        integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css">
-    <!-- JavaScript for Interactivity -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
-        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
-        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k"
-        crossorigin="anonymous"></script>
-</head>
-
-<body>
-
-    <a href="/logout">Logout</a>
-      <a href="/caretaker_home">Back to home</a>
-
-    <table class="table">
-        <thead>
-            <tr>
-				<th scope="col">Pet Owner Name</th>
-                <th scope="col">Pet Name</th>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-                <th scope="col">Bid Amount</th>
-            </tr>
-        </thead>
-        <tbody>
-            <% for(var i=0; i<data.length; i++) { %>
-            <tr>
-                <td><%= data[i].name%></td>
-                <td><%= data[i].pet_name%></td>
-                <td><%= data[i].startdate%></td>
-                <td><%= data[i].enddate%></td>
-                <td><%= data[i].amount%></td>
-				<% if (data[i].status == 0) { %>
-					<td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-bid_amount="<%= data[i].amount%>">Accept Bid</button></td>
-				<% } %>
-            </tr>
-            <% } %>
-        </tbody>
-    </table>
-	
-<div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="bidModalLabel">Accept Bid</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+  <body>
+    <!--================Header Area =================-->
+    <header class="header_area">
+      <div class="container">
+          <nav class="navbar navbar-expand-lg navbar-light">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <a class="navbar-brand logo_h" href="/"><img src="image/Logo.png" alt=""></a>
+              <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+              </button>
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                  <ul class="nav navbar-nav menu_nav ml-auto">
+                      <li class="nav-item"><a class="nav-link" href="/caretaker_home">Home</a></li> 
+                      <li class="nav-item active"><a class="nav-link" href="/caretaker_bids">Accept Bid Requests</a></li>
+                      <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                  </ul>
+              </div> 
+          </nav>
       </div>
-                <form action="/caretaker_bids/accept" method="POST">
-      <div class="modal-body">
+    </header>
+    <!--================Header Area =================-->
 
-
-		  <div class="form-group">
-            <label for="caretaker_email" class="col-form-label">My Email</label>
-            <input type="text" class="form-control" id="caretaker_email" name="caretaker_email" readonly>
+    <!--================Breadcrumb Area =================-->
+    <section class="breadcrumb_area">
+      <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+      <div class="container">
+          <div class="page-cover text-center">
+              <h2 class="page-cover-tittle">Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h2>
           </div>
-		  
-          <div class="form-group">
-            <label for="pet_owner_name" class="col-form-label">Pet Owner Name</label>
-            <input type="text" class="form-control" id="pet_owner_name" name="pet_owner_name" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="petowner_email" class="col-form-label">Pet Owner Email</label>
-            <input type="text" class="form-control" id="petowner_email"  name="petowner_email" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="pet_name" class="col-form-label">Pet Name</label>
-            <input type="text" class="form-control" id="pet_name"  name="pet_name" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="pet_category" class="col-form-label">Pet Category</label>
-            <input type="text" class="form-control" id="pet_category"  name="pet_category" readonly>
-          </div>
-
-          <div class="form-group">
-            <label for="pet_requirements" class="col-form-label">Special Requirements</label>
-            <input type="text" class="form-control" id="pet_requirements"  name="pet_requirements" readonly>
-          </div>
-
-          <div class="form-group">
-            <label class="col-form-label">Date</label>
-			<input type="text" class="form-control" id="start_date"  name="start_date" readonly>             
-			<input type="text" class="form-control" id="end_date"  name="end_date" readonly>
-          </div>
-		  
-          <div class="form-group">
-            <label for="bid_amount" class="col-form-label">Bid Amount</label>
-            <input type="text" class="form-control" id="bid_amount"  name="bid_amount" readonly>
-          </div>
-
       </div>
-      <div class="modal-footer">
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <input type="submit" value="Accept Bid" />
-      </div>
-            </form>
-    </div>
-  </div>
-</div>	
+  </section>
+  <!--================Breadcrumb Area =================-->
 
-</body>
+    <!--================ Bidding Area  =================-->
+    <section class="testimonial_area section_gap">
+      <div class="container">
+          <div class="section_title text-center">
+              <h2 class="title_color">All Bids</h2>
+          </div>
+          <div class="card shadow mb-4">
+            <div class="card-body">
+              <!-- DataTales Example -->
+              <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                          <th>Pet Owner Name</th>
+                          <th>Pet Name</th>
+                          <th>Start Date</th>
+                          <th>End Date</th>
+                          <th>Bid Amount</th>
+                          <th>Accept</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      <% for(var i=0; i<data.length; i++) { %>
+                        <tr>
+                            <td><%= data[i].name%></td>
+                            <td><%= data[i].pet_name%></td>
+                            <td><%= data[i].startdate%></td>
+                            <td><%= data[i].enddate%></td>
+                            <td><%= data[i].amount%></td>
+                            <% if (data[i].status == 0) { %>
+                              <td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-bid_amount="<%= data[i].amount%>">Accept Bid</button></td>
+                            <% } %>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <!--================ Bidding Area  =================-->
+    
+    <div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="bidModalLabel">Accept Bid</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+                    <form action="/caretaker_bids/accept" method="POST">
+          <div class="modal-body">
+
+
+          <div class="form-group">
+                <label for="caretaker_email" class="col-form-label">My Email</label>
+                <input type="text" class="form-control" id="caretaker_email" name="caretaker_email" readonly>
+              </div>
+          
+              <div class="form-group">
+                <label for="pet_owner_name" class="col-form-label">Pet Owner Name</label>
+                <input type="text" class="form-control" id="pet_owner_name" name="pet_owner_name" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="petowner_email" class="col-form-label">Pet Owner Email</label>
+                <input type="text" class="form-control" id="petowner_email"  name="petowner_email" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="pet_name" class="col-form-label">Pet Name</label>
+                <input type="text" class="form-control" id="pet_name"  name="pet_name" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="pet_category" class="col-form-label">Pet Category</label>
+                <input type="text" class="form-control" id="pet_category"  name="pet_category" readonly>
+              </div>
+
+              <div class="form-group">
+                <label for="pet_requirements" class="col-form-label">Special Requirements</label>
+                <input type="text" class="form-control" id="pet_requirements"  name="pet_requirements" readonly>
+              </div>
+
+              <div class="form-group">
+                <label class="col-form-label">Date</label>
+          <input type="text" class="form-control" id="start_date"  name="start_date" readonly>             
+          <input type="text" class="form-control" id="end_date"  name="end_date" readonly>
+              </div>
+          
+              <div class="form-group">
+                <label for="bid_amount" class="col-form-label">Bid Amount</label>
+                <input type="text" class="form-control" id="bid_amount"  name="bid_amount" readonly>
+              </div>
+
+          </div>
+          <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" value="Accept Bid" />
+          </div>
+                </form>
+        </div>
+      </div>
+    </div>	
+
+    <!--================ start footer Area  =================-->	
+    <footer class="footer-area section_gap">
+      <div class="container">
+      <div class="border_line"></div>
+      <div class="row footer-bottom d-flex justify-content-between align-items-center">
+          <p class="col-lg-8 col-sm-12 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+        </div>
+        </div>
+    </footer>
+    <!--================ End footer Area  =================-->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+    <script src="js/jquery.ajaxchimp.min.js"></script>
+    <script src="js/mail-script.js"></script>
+    <script src="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.js"></script>
+    <script src="vendors/nice-select/js/jquery.nice-select.js"></script>
+    <script src="js/mail-script.js"></script>
+    <script src="js/stellar.js"></script>
+    <script src="vendors/lightbox/simpleLightbox.min.js"></script>
+    <script src="js/custom.js"></script>
+  </body>
 
 </html>
 
