@@ -82,7 +82,11 @@ app.get("/admin_home", checkNotAuthenticated, (req, res) => {
 app.get("/pet_owner_home", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
   pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`, [email], (err, data) => {
-		res.render('pet_owner_home', { title: 'Pet Owner Home', data: data.rows, user: req.user.name});
+    let pets_data = data;
+    pool.query(`SELECT * FROM pet_category`, (err, data) => {
+      let all_category_data = data;
+      res.render('pet_owner_home', { title: 'Pet Owner Home', data: pets_data.rows, all_category: all_category_data.rows, user: req.user.name});
+    });
 	});
 });
 
@@ -100,8 +104,7 @@ app.get("/caretaker_home", checkNotAuthenticated, (req, res) => {
         pool.query(`SELECT * FROM full_time_takes_leave WHERE caretaker_email = $1`, [email],(err, data) => {
           let leave_data = data;
           res.render('caretaker_home', { title: 'Care Taker', caretaker_type: type, charge: charge_data.rows, all_category: all_category_data.rows, availability: availability_data.rows, user: req.user.name, leave: leave_data.rows});
-        })
-        
+        })      
       });
     });
   });
@@ -493,8 +496,7 @@ app.post(
 app.post(
   "/caretaker_home/charge", async (req, res) => {
     let email = req.user.email;
-    let {select_category} = req.body;
-    let {charge} = req.body;
+    let {select_category,charge} = req.body;
     console.log({
       select_category,
       charge
@@ -505,9 +507,7 @@ app.post(
     if (!select_category) {
       errors.push({ message: "Please enter the category" });
     }
-    // if (!charge) {
-    //   errors.push({ message: "Please enter the daily charge" });
-    // }
+
     pool.query(`SELECT * FROM caretaker WHERE email = $1`, [email], (err, data) => {
       let type = data.rows[0].type;
       if (type == "part_time") {
@@ -515,36 +515,25 @@ app.post(
           errors.push({ message: "Please enter the daily charge" });
         }
       }
-    });
-
-    if (errors.length > 0) {
-      res.render("caretaker_home", {
-        // category
-        select_category
-      });
-    } else {
-      console.log({
-        email
-      });
-      pool.query(
-        // `INSERT INTO caretaker_has_charge (caretaker_email, category_name, amount)
-        //   VALUES ($1, $2, $3)
-        //   `,
-        `CALL caretaker_charge($1, $2, $3)`,
-        [email, select_category, charge],
-        (err, results) => {
-          if (err) {
-            throw err;
+      if (errors.length > 0) {
+        res.render("caretaker_home", {
+          select_category,
+          charge
+        });
+      } else {
+        pool.query(
+          `CALL caretaker_charge($1, $2, $3)`,
+          [email, select_category, charge],
+          (err, results) => {
+            if (err) {
+              throw err;
+            }
+            console.log("charge", results.rows);
+            res.redirect("/caretaker_home");
           }
-          console.log("charge", results.rows);
-          req.flash(
-            "success_msg",
-            "You successfully added a charge for a pet category"
-          );
-        }
-      );
-      res.redirect("/caretaker_home");
-    }
+        );
+      }
+    });
   }
 )
 

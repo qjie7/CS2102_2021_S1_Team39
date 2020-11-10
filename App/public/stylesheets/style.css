@@ -6,3 +6,14 @@ body {
 a {
   color: #00B7FF;
 }
+
+.bg-login {
+  background-color: #f9f9ff;
+  background-size: cover;
+}
+
+.bg-login-pic {
+  background: url("../image/login-dog.jpeg");
+  background-position: center;
+  background-size: cover;
+}

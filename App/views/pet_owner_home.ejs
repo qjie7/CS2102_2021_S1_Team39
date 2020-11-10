@@ -60,7 +60,7 @@
         <section class="testimonial_area section_gap">
             <div class="container">
                 <div class="section_title text-center">
-                    <h2 class="title_w">Pets</h2>
+                    <h2 class="title_color">Pets</h2>
                 </div>
                 <div class="card shadow mb-4">
                     <div class="card-header py-3">
@@ -73,10 +73,10 @@
                                     <input class="form-control" type="text" id="requirement" name="requirement" placeholder="Special Requirements (if any)" />
                                 </div>
                                 <div class="form-group col">
-                                    <select name="category" id="category">
-                                        <option value="cat">Cat</option>
-                                        <option value="dog">Dog</option>
-                                        <option value="rabbit">Rabbit</option>
+                                    <select class="form-control" name="category" id="category">
+                                        <% for(var i=0; i<all_category.length; i++) { %>
+                                        <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
+                                        <% } %>
                                     </select>
                                 </div>
                             </div>
