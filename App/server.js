@@ -405,48 +405,128 @@ app.post(
 
 app.post(
   "/pet_owner_home", async (req, res) => {
-    let email = req.user.email;
-    let { name, requirement, category } = req.body;
-    console.log({
-      email,
-      name,
-      requirement,
-      category
-    });
 
-    let errors = [];
 
-    if (!name || !category) {
-      errors.push({ message: "Please enter all fields" });
-    }
-    if (errors.length > 0) {
-      res.render("pet_owner_home", {
-        errors,
+    var count = Object.keys(req.body).length;
+    console.log(count);
+
+    if (count == 1) {
+      let email = req.user.email;
+      console.log("reqbody", req.body.delete);
+
+      let errors = [];
+
+      if (!req.body.delete) {
+        errors.push({ message: "Please enter a pet name!" });
+      }
+      if (errors.length > 0) {
+        let pet_name = req.body.delete;
+        res.render("pet_owner_home", {
+          pet_name
+        });
+      } else {
+          pool.query(
+          `DELETE FROM pets_own_by WHERE pet_owner_email = $1 and pet_name = $2`,
+          [email, req.body.delete],
+          (err, results) => {
+            if (err) {
+              throw err;
+            }
+            console.log(results.rows);
+            req.flash(
+              "success_msg",
+              "You successfully deleted a pet"
+            );
+            res.redirect("/pet_owner_home");
+          }
+        );
+      }
+
+    } else {
+      let email = req.user.email;
+      let { name, requirement, category } = req.body;
+      console.log({
+        email,
         name,
         requirement,
         category
       });
-    } else {
-      pool.query(
-        `INSERT INTO pets_own_by (pet_owner_email, pet_name, special_requirements, category_name)
-          VALUES ($1, $2, $3, $4)
-          `,
-        [email, name, requirement, category],
-        (err, results) => {
-          if (err) {
-            throw err;
+      let errors = [];
+
+      if (!name || !category) {
+        errors.push({ message: "Please enter all fields" });
+      }
+      if (errors.length > 0) {
+        res.render("pet_owner_home", {
+          errors,
+          name,
+          requirement,
+          category
+        });
+      } else {
+        pool.query(
+          `INSERT INTO pets_own_by (pet_owner_email, pet_name, special_requirements, category_name)
+            VALUES ($1, $2, $3, $4)
+            `,
+          [email, name, requirement, category],
+          (err, results) => {
+            if (err) {
+              throw err;
+            }
+            console.log(results.rows);
+            req.flash(
+              "success_msg",
+              "You successfully added a pet"
+            );
+            res.redirect("/pet_owner_home");
           }
-          console.log(results.rows);
-          req.flash(
-            "success_msg",
-            "You successfully added a pet"
-          );
-          res.redirect("/pet_owner_home");
-        }
-      );
+        );
+      }
+
     }
+
+
   }
 )
+
+// app.post(
+//   "/pet_owner_home", async (req, res) => {
+
+//     let email = req.user.email;
+
+//     console.log({
+//       email
+//     });
+//     console.log("reqbody", req.body);
+
+//     let errors = [];
+
+//     if (!pet_name) {
+//       errors.push({ message: "Please enter a pet name!" });
+//     }
+//     if (errors.length > 0) {
+//       res.render("pet_owner_home", {
+//         pet_name
+//       });
+//     } else {
+//         pool.query(
+//         `DELETE FROM pets_own_by WHERE pet_owner_email = $1 and pet_name = $2`,
+//         [email, pet_name],
+//         (err, results) => {
+//           if (err) {
+//             throw err;
+//           }
+//           console.log(results.rows);
+//           req.flash(
+//             "success_msg",
+//             "You successfully deleted a pet"
+//           );
+//           res.redirect("/pet_owner_home");
+//         }
+//       );
+//     }
+//   }
+// )
 
 // admin adds pet category with basic charge
 app.post(
