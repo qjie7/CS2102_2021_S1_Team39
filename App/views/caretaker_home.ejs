@@ -1,23 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link rel="icon" href="image/favicon.png" type="image/png">
-        <title>Pet Care Home</title>
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="css/bootstrap.css">
-        <link rel="stylesheet" href="vendors/linericon/style.css">
-        <link rel="stylesheet" href="css/font-awesome.min.css">
-        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
-        <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
-        <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
-        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
-        <!-- main css -->
-        <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" href="css/responsive.css">
-    </head>
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="image/favicon.png" type="image/png">
+    <title>Pet Care Home</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="vendors/linericon/style.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css">
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
+    <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <!-- main css -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
 
 <body>
     <!--================Header Area =================-->
@@ -26,7 +27,9 @@
             <nav class="navbar navbar-expand-lg navbar-light">
                 <!-- Brand and toggle get grouped for better mobile display -->
                 <a class="navbar-brand logo_h" href="/"><img src="image/Logo.png" alt=""></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -34,11 +37,12 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                     <ul class="nav navbar-nav menu_nav ml-auto">
-                        <li class="nav-item active"><a class="nav-link" href="/caretaker_home">Home</a></li> 
+                        <li class="nav-item active"><a class="nav-link" href="/caretaker_home">Home</a></li>
                         <li class="nav-item"><a class="nav-link" href="/caretaker_bids">Accept Bid Requests</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal"
+                                data-target="#logoutModal">Logout</a></li>
                     </ul>
-                </div> 
+                </div>
             </nav>
         </div>
     </header>
@@ -46,7 +50,8 @@
 
     <!--================Breadcrumb Area =================-->
     <section class="breadcrumb_area">
-        <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+        <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background="">
+        </div>
         <div class="container">
             <div class="page-cover text-center">
                 <h2 class="page-cover-tittle">Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h2>
@@ -57,6 +62,8 @@
 
     <!--================ Charge Area  =================-->
     <section class="testimonial_area section_gap">
+
+        
         <div class="container">
             <div class="section_title text-center">
                 <h2 class="title_color">Add Charges</h2>
@@ -68,13 +75,15 @@
                             <div class="form-group col">
                                 <select class="form-control" name="select_category" id="select_category">
                                     <% for(var i=0; i<all_category.length; i++) { %>
-                                    <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
+                                    <option value="<%= all_category[i].category_name%>">
+                                        <%= all_category[i].category_name%> </option>
                                     <% } %>
                                 </select>
                             </div>
                             <div class="form-group col">
                                 <% if (caretaker_type == "part_time") { %>
-                                    <input class="form-control" type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
+                                <input class="form-control" type="text" id="charge" name="charge"
+                                    placeholder="Daily charge (S$)" required />
                                 <% } %>
                             </div>
                         </div>
@@ -84,40 +93,62 @@
                             </div>
                         </div>
                     </form>
-                </div>
-                <div class="card-body">
-                    <!-- DataTales Example -->
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>Pet Category</th>
-                                    <th>Daily Charge</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% for(var i=0; i<charge.length; i++) { %>
+
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <a href="#" data-toggle="modal" data-target="#deleteChargesModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Delete category
+                            </a>
+
+                            <% if (caretaker_type == "part_time") { %>
+
+
+                            <a href="#" data-toggle="modal" data-target="#updateChargesModal">
+                                <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                Update Category charges
+                            </a>
+
+                            <% } %>
+                        </div>
+
+                        <div class="form-group col">
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- DataTales Example -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Pet Category</th>
+                                        <th>Daily Charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <% for(var i=0; i<charge.length; i++) { %>
                                     <tr>
                                         <td><%= charge[i].category_name%></td>
                                         <td><%= charge[i].amount%></td>
                                     </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
+                                    <% } %>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
     </section>
     <!--================ Charge Area  =================-->
 
-    <!--================ Availbality Area  =================-->
+    <!--================ availability Area  =================-->
     <section class="salary_area section_gap">
-        <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background="">  
+        <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background="">
         </div>
         <div class="container">
             <div class="section_title text-center">
-                <h2 class="title_color">Declare availbality</h2>
+                <h2 class="title_color">Declare Availability</h2>
             </div>
             <div>
                 <ul>
@@ -125,7 +156,7 @@
                     <li><%= messages.available_success_msg %></li>
                     <% } %>
                 </ul>
-            
+
                 <ul>
                     <% if (messages.available_error) { %>
                     <li><%= messages.available_error %></li>
@@ -147,7 +178,7 @@
                         </div>
                         <div class="row">
                             <div class="form-group col">
-                                <input class="btn btn-primary" type="submit" value="Add Availablity" />
+                                <input class="btn btn-primary" type="submit" value="Add Availability" />
                             </div>
                         </div>
                     </form>
@@ -164,10 +195,10 @@
                             </thead>
                             <tbody>
                                 <% for(var i=0; i<availability.length; i++) { %>
-                                    <tr>
-                                        <td><%= availability[i].start_date.toDateString()%></td>
-                                        <td><%= availability[i].end_date.toDateString()%></td>
-                                    </tr>
+                                <tr>
+                                    <td><%= availability[i].start_date.toDateString()%></td>
+                                    <td><%= availability[i].end_date.toDateString()%></td>
+                                </tr>
                                 <% } %>
                             </tbody>
                         </table>
@@ -190,7 +221,7 @@
                     <li><%= messages.success_msg %></li>
                     <% } %>
                 </ul>
-            
+
                 <ul>
                     <% if (messages.error) { %>
                     <li><%= messages.error %></li>
@@ -221,6 +252,7 @@
                             </div>
                         </div>
                     </form>
+
                 </div>
                 <div class="card-body">
                     <!-- DataTales Example -->
@@ -234,10 +266,10 @@
                             </thead>
                             <tbody>
                                 <% for(var i=0; i<leave.length; i++) { %>
-                                    <tr>
-                                        <td><%= leave[i].start_date.toDateString()%></td>
-                                        <td><%= leave[i].end_date.toDateString()%></td>
-                                    </tr>
+                                <tr>
+                                    <td><%= leave[i].start_date.toDateString()%></td>
+                                    <td><%= leave[i].end_date.toDateString()%></td>
+                                </tr>
                                 <% } %>
                             </tbody>
                         </table>
@@ -265,14 +297,16 @@
                             <div class="col">
                                 <select class="form-control" name="select_category" id="select_category">
                                     <% for(var i=0; i<all_category.length; i++) { %>
-                                    <option value="<%= all_category[i].category_name%>"> <%= all_category[i].category_name%> </option>
+                                    <option value="<%= all_category[i].category_name%>">
+                                        <%= all_category[i].category_name%> </option>
                                     <% } %>
                                 </select>
                             </div>
                             <% if (caretaker_type == "part_time") { %>
-                                <div class="col">
-                                    <input class="form-control" type="text" id="charge" name="charge" placeholder="Daily charge (S$)" required />
-                                </div>
+                            <div class="col">
+                                <input class="form-control" type="text" id="charge" name="charge"
+                                    placeholder="Daily charge (S$)" required />
+                            </div>
                             <% } %>
                         </div>
                     </div>
@@ -285,7 +319,8 @@
     </form>
 
     <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -303,15 +338,90 @@
         </div>
     </div>
 
-    <!--================ start footer Area  =================-->	
+
+    <!-- delete Category Modal-->
+    <form action="/caretaker_home/deleteCharges" method="POST">
+        <div class="modal fade" id="deleteChargesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete a category?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="form-group col">
+                                <select class="form-control" name="delete" id="delete">
+                                    <% for(var i=0; i<all_category.length; i++) { %>
+                                    <option value="<%= all_category[i].category_name%>">
+                                        <%= all_category[i].category_name%> </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn btn-primary" type="submit" value="Delete Category" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!-- update Category Modal-->
+    <form action="/caretaker_home/updateCharges" method="POST">
+        <div class="modal fade" id="updateChargesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Update a category charges ?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="form-group col">
+                                <select class="form-control" name="update1" id="update1">
+                                    <% for(var i=0; i<all_category.length; i++) { %>
+                                    <option value="<%= all_category[i].category_name%>">
+                                        <%= all_category[i].category_name%> </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input class="form-control" type="text" id="update2" name="update2"
+                                    placeholder="New Basic charge (S$)" required />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input class="btn btn-primary" type="submit" value="Update Charges" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <!--================ start footer Area  =================-->
     <footer class="footer-area section_gap">
         <div class="container">
-        <div class="border_line"></div>
-        <div class="row footer-bottom d-flex justify-content-between align-items-center">
-            <p class="col-lg-8 col-sm-12 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-    Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
-        </div>
+            <div class="border_line"></div>
+            <div class="row footer-bottom d-flex justify-content-between align-items-center">
+                <p class="col-lg-8 col-sm-12 footer-text m-0">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    Copyright &copy;
+                    <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is
+                    made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com"
+                        target="_blank">Colorlib</a>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </p>
+            </div>
         </div>
     </footer>
     <!--================ End footer Area  =================-->

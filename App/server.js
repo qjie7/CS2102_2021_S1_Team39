@@ -405,44 +405,7 @@ app.post(
 
 app.post(
   "/pet_owner_home", async (req, res) => {
-
-
-    var count = Object.keys(req.body).length;
-    console.log(count);
-
-    if (count == 1) {
-      let email = req.user.email;
-      console.log("reqbody", req.body.delete);
-
-      let errors = [];
-
-      if (!req.body.delete) {
-        errors.push({ message: "Please enter a pet name!" });
-      }
-      if (errors.length > 0) {
-        let pet_name = req.body.delete;
-        res.render("pet_owner_home", {
-          pet_name
-        });
-      } else {
-          pool.query(
-          `DELETE FROM pets_own_by WHERE pet_owner_email = $1 and pet_name = $2`,
-          [email, req.body.delete],
-          (err, results) => {
-            if (err) {
-              throw err;
-            }
-            console.log(results.rows);
-            req.flash(
-              "success_msg",
-              "You successfully deleted a pet"
-            );
-            res.redirect("/pet_owner_home");
-          }
-        );
-      }
-
-    } else {
+    
       let email = req.user.email;
       let { name, requirement, category } = req.body;
       console.log({
@@ -482,51 +445,42 @@ app.post(
           }
         );
       }
-
-    }
-
-
   }
 )
 
-// app.post(
-//   "/pet_owner_home", async (req, res) => {
+app.post(
+  "/pet_owner_home/delete", async (req, res) => {
 
-//     let email = req.user.email;
+    let email = req.user.email;
+    let errors = [];
 
-//     console.log({
-//       email
-//     });
-//     console.log("reqbody", req.body);
-
-//     let errors = [];
-
-//     if (!pet_name) {
-//       errors.push({ message: "Please enter a pet name!" });
-//     }
-//     if (errors.length > 0) {
-//       res.render("pet_owner_home", {
-//         pet_name
-//       });
-//     } else {
-//         pool.query(
-//         `DELETE FROM pets_own_by WHERE pet_owner_email = $1 and pet_name = $2`,
-//         [email, pet_name],
-//         (err, results) => {
-//           if (err) {
-//             throw err;
-//           }
-//           console.log(results.rows);
-//           req.flash(
-//             "success_msg",
-//             "You successfully deleted a pet"
-//           );
-//           res.redirect("/pet_owner_home");
-//         }
-//       );
-//     }
-//   }
-// )
+    if (!req.body.delete) {
+      errors.push({ message: "Please enter a pet name!" });
+    }
+    if (errors.length > 0) {
+      let pet_name = req.body.delete;
+      res.render("pet_owner_home", {
+        pet_name
+      });
+    } else {
+        pool.query(
+        `DELETE FROM pets_own_by WHERE pet_owner_email = $1 and pet_name = $2`,
+        [email, req.body.delete],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log(results.rows);
+          req.flash(
+            "success_msg",
+            "You successfully deleted a pet"
+          );
+          res.redirect("/pet_owner_home");
+        }
+      );
+    }
+  }
+)
 
 // admin adds pet category with basic charge
 app.post(
@@ -572,6 +526,40 @@ app.post(
   }
 )
 
+// app.post(
+//   "/admin_home/deleteCategory", async (req, res) => {
+
+//     //let email = req.user.email;
+//     let errors = [];
+
+//     if (!req.body.category_name) {
+//       errors.push({ message: "Please enter a pet category name!" });
+//     }
+//     if (errors.length > 0) {
+//       let pet_category = req.body.category_name;
+//       res.render("caretaker_home", {
+//         pet_category
+//       });
+//     } else {
+//         pool.query(
+//         `DELETE FROM pet_category WHERE category_name = $1`,
+//         [req.body.category_name],
+//         (err, results) => {
+//           if (err) {
+//             throw err;
+//           }
+//           console.log(results.rows);
+//           req.flash(
+//             "success_msg",
+//             "You successfully deleted a pet category"
+//           );
+//           res.redirect("/admin_home");
+//         }
+//       );
+//     }
+//   }
+// )
+
 // caretaker adds daily charge
 app.post(
   "/caretaker_home/charge", async (req, res) => {
@@ -609,11 +597,85 @@ app.post(
               throw err;
             }
             console.log("charge", results.rows);
+            req.flash(
+              "add_success_msg",
+              "You successfully deleted a pet category charge"
+            );
             res.redirect("/caretaker_home");
           }
         );
       }
     });
+  }
+)
+
+app.post(
+  "/caretaker_home/deleteCharges", async (req, res) => {
+
+    let email = req.user.email;
+    let errors = [];
+
+    if (!req.body.delete) {
+      errors.push({ message: "Please enter a pet category!" });
+    }
+    if (errors.length > 0) {
+      let pet_category = req.body.delete;
+      res.render("caretaker_home", {
+        pet_category
+      });
+    } else {
+        pool.query(
+        `DELETE FROM caretaker_has_charge WHERE caretaker_email = $1 and category_name = $2`,
+        [email, req.body.delete],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log(results.rows);
+          req.flash(
+            "delete_success_msg",
+            "You successfully deleted a pet category charge"
+          );
+          res.redirect("/caretaker_home");
+        }
+      );
+    }
+  }
+)
+
+app.post(
+  "/caretaker_home/updateCharges", async (req, res) => {
+
+    let email = req.user.email;
+    let errors = [];
+
+    if (!req.body.update1 || !req.body.update2) {
+      errors.push({ message: "Please enter all fields!" });
+    }
+    if (errors.length > 0) {
+      let pet_category = req.body.update1;
+      let pet_charges = req.body.update2;
+      res.render("caretaker_home", {
+        pet_category,
+        pet_charges
+      });
+    } else {
+        pool.query(
+        `UPDATE caretaker_has_charge SET amount = $1 WHERE caretaker_email = $2 and category_name = $3`,
+        [req.body.update2, email, req.body.update1],
+        (err, results) => {
+          if (err) {
+            throw err;
+          }
+          console.log(results.rows);
+          req.flash(
+            "update_success_msg",
+            "You successfully updated a pet category charge"
+          );
+          res.redirect("/caretaker_home");
+        }
+      );
+    }
   }
 )
 
@@ -731,6 +793,8 @@ app.post(
     }
   }
 )
+
+
 
 // pet owner searches for caretaker for his pet
 app.post(
