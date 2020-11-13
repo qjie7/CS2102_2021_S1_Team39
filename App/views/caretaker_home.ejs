@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
     <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css">
+
     <!-- main css -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -63,7 +65,7 @@
     <!--================ Charge Area  =================-->
     <section class="testimonial_area section_gap">
 
-        
+
         <div class="container">
             <div class="section_title text-center">
                 <h2 class="title_color">Add Charges</h2>
@@ -117,9 +119,10 @@
                         </div>
                     </div>
                     <div class="card-body">
+
                         <!-- DataTales Example -->
                         <div class="table-responsive">
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                            <table class="table table-bordered"  width="100%" cellspacing="0" id="table1">
                                 <thead>
                                     <tr>
                                         <th>Pet Category</th>
@@ -185,15 +188,16 @@
                 </div>
                 <!-- DataTales Example -->
                 <div class="card-body">
+
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered" width="100%" cellspacing="0" id="table2">
                             <thead>
                                 <tr>
                                     <th>Start Date</th>
                                     <th>End Date</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody >
                                 <% for(var i=0; i<availability.length; i++) { %>
                                 <tr>
                                     <td><%= availability[i].start_date.toDateString()%></td>
@@ -255,9 +259,10 @@
 
                 </div>
                 <div class="card-body">
+
                     <!-- DataTales Example -->
                     <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <table class="table table-bordered" width="100%" cellspacing="0" id="table3">
                             <thead>
                                 <tr>
                                     <th>Start Date</th>
@@ -429,6 +434,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="js/jquery-3.2.1.min.js"></script>
+
     <script src="js/popper.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
@@ -440,6 +446,28 @@
     <script src="js/stellar.js"></script>
     <script src="vendors/lightbox/simpleLightbox.min.js"></script>
     <script src="js/custom.js"></script>
+
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap4.min.js"></script>
+
+        <script>
+        $(document).ready(function() {
+          $('#table1').DataTable();
+        } );
+      </script>
+
+      <script>
+      $(document).ready(function() {
+        $('#table2').DataTable();
+      } );
+    </script>
+
+    <script>
+    $(document).ready(function() {
+      $('#table3').DataTable();
+    } );
+  </script>
+
 </body>
 
 </html>

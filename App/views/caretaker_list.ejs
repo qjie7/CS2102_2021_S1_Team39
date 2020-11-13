@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
     <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+      <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css">
     <!-- main css -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -34,12 +35,12 @@
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                   <ul class="nav navbar-nav menu_nav ml-auto">
-                      <li class="nav-item"><a class="nav-link" href="/pet_owner_home">Home</a></li> 
+                      <li class="nav-item"><a class="nav-link" href="/pet_owner_home">Home</a></li>
                       <li class="nav-item active"><a class="nav-link" href="/caretaker_search">Search caretaker</a></li>
                       <li class="nav-item"><a class="nav-link" href="/bids_list">View bids/transactions</a></li>
                       <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
                   </ul>
-              </div> 
+              </div>
           </nav>
       </div>
     </header>
@@ -64,16 +65,17 @@
         </div>
         <div class="card shadow mb-4">
           <div class="card-body">
+
             <!-- DataTales Example -->
             <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <table class="table table-bordered"  width="100%" cellspacing="0" id="table1">
                 <thead>
                   <tr>
-                    <th>Caretaker Name</th>
-                    <th>For</th>
-                    <th>Ratings</th>
-                    <th>Price per day</th>
-                    <th></th>
+                    <th style="width:250px">Caretaker Name</th>
+                    <th style="width:100px">For</th>
+                    <th style="width:100px">Ratings</th>
+                    <th style="width:250px">Daily charge ($)</th>
+                    <th style="width:100px">Bid</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -92,24 +94,25 @@
           </div>
         </div>
 
-        <div class="section_title text-center">
+        <div class="section_title text-center" style="margin-top:50px">
           <h2 class="title_color">Full-time Caretaker</h2>
         </div>
         <div class="card shadow mb-4">
           <div class="card-body">
+
             <!-- DataTales Example -->
             <div class="table-responsive">
-              <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <table class="table table-bordered" width="100%" cellspacing="0" id="table2">
                 <thead>
                   <tr>
-                    <th>Caretaker Name</th>
-                    <th>For</th>
-                    <th>Ratings</th>
-                    <th>Price per day</th>
-                    <th></th>
-                  </tr>
+                    <th style="width:250px">Caretaker Name</th>
+                    <th style="width:100px">For</th>
+                    <th style="width:100px">Ratings</th>
+                    <th style="width:250px">Daily charge ($)</th>
+                    <th style="width:100px">Book</th>
+                </tr>
                 </thead>
-                <tbody>
+                <tbody >
                   <% for(var i=0; i<full_time_data.length; i++) { %>
                     <tr>
                         <td><%= full_time_data[i].name%></td>
@@ -121,7 +124,7 @@
                   <% } %>
                 </tbody>
               </table>
-            </div>  
+            </div>
           </div>
         </div>
       </div>
@@ -136,7 +139,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>               			  
+          </div>
         <form action="/caretaker_list/bid" method="POST">
           <div class="modal-body">
 
@@ -183,7 +186,7 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <input type="submit" value="Confirm" />
           </div>
         </form>
@@ -243,7 +246,7 @@
                 <label for="amount" class="col-form-label">Amount</label>
                 <input type="number" class="form-control" id="amount" name="amount" readonly></input>
               </div>
-          
+
           <div class="form-group">
                 <label for="payment_method" class="col-form-label">Payment Method</label>
           <select name="payment_method" id="payment_method" required>
@@ -252,16 +255,16 @@
                     <option value="Bank Transfer">Bank Transfer</option>
                 </select>
               </div>
-          
+
           <div class="form-group">
                 <label for="method_to" class="col-form-label">Method of Transfer To</label>
-          <select name="method_to" id="method_to" required> 
+          <select name="method_to" id="method_to" required>
                     <option value="Pet Owner deliver">Pet Owner deliver</option>
                     <option value="Care Taker pick up">Care Taker pick up</option>
                     <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
                 </select>
               </div>
-          
+
           <div class="form-group">
                 <label for="method_from" class="col-form-label">Method of Transfer From</label>
           <select name="method_from" id="method_from" required>
@@ -273,7 +276,7 @@
 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>         
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
         <input type="submit" value="Confirm" />
           </div>
         </form>
@@ -301,7 +304,7 @@
     </div>
   </div>
 
-    <!--================ start footer Area  =================-->	
+    <!--================ start footer Area  =================-->
     <footer class="footer-area section_gap">
       <div class="container">
       <div class="border_line"></div>
@@ -362,9 +365,9 @@
   $('#pet_requirements').val(pet_requirements)
   $('#start_date').val(start_date)
   $('#end_date').val(end_date)
-  
+
   })
-  
+
   // book modal for full-time caretaker
   $('#bookModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
@@ -396,6 +399,21 @@
   $('#payment_method').val(payment_method)
   $('#method_to').val(method_to)
   $('#method_from').val(method_from)
-  
+
   })
+</script>
+
+<script src="js/jquery.dataTables.min.js"></script>
+<script src="js/dataTables.bootstrap4.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+      $('#table1').DataTable();
+    } );
+  </script>
+
+  <script>
+  $(document).ready(function() {
+    $('#table2').DataTable();
+  } );
 </script>

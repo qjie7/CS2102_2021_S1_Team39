@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
     <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+        <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css">
     <!-- main css -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
@@ -34,12 +35,12 @@
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                   <ul class="nav navbar-nav menu_nav ml-auto">
-                      <li class="nav-item"><a class="nav-link" href="/pet_owner_home">Home</a></li> 
+                      <li class="nav-item"><a class="nav-link" href="/pet_owner_home">Home</a></li>
                       <li class="nav-item"><a class="nav-link" href="/caretaker_search">Search caretaker</a></li>
                       <li class="nav-item active"><a class="nav-link" href="/bids_list">View bids/transactions</a></li>
                       <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
                   </ul>
-              </div> 
+              </div>
           </nav>
       </div>
     </header>
@@ -64,9 +65,10 @@
           </div>
           <div class="card shadow mb-4">
             <div class="card-header py-3">
+
               <!-- DataTales Example -->
               <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" width="100%" cellspacing="0" id="table1">
                     <thead>
                       <tr>
                         <th>Caretaker Name</th>
@@ -80,38 +82,41 @@
                     <tbody>
                       <% for(var i=0; i<data.length; i++) { %>
                         <tr>
-                          <% if (data[i].status != 2) { %>
+                    
                             <td><%= data[i].name%></td>
                             <td><%= data[i].pet_name%></td>
                             <td><%= data[i].startdate%></td>
                             <td><%= data[i].enddate%></td>
                             <td><%= data[i].amount%></td>
+                            <td>
                             <% if (data[i].status == 1) { %>
-                              <td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-amount="<%= data[i].amount%>">Enter Transaction Details</button></td>									
+                              <button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-amount="<%= data[i].amount%>">Enter Transaction Details</button>
                             <% } %>
-                          <% } %>
+                            </td>
+
                         </tr>
                       <% } %>
                     </tbody>
                 </table>
               </div>
             </div>
-          </div>          
+          </div>
       </div>
     </section>
     <!--================ Pending Bids Area  =================-->
 
     <!--================ Confirmed Transactions Area  =================-->
-    <section class="testimonial_area section_gap">
+    <section class="testimonial_area ">
       <div class="container">
           <div class="section_title text-center">
               <h2 class="title_color">Confirmed Transactions</h2>
           </div>
           <div class="card shadow mb-4">
             <div class="card-header py-3">
+
               <!-- DataTales Example -->
               <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered"  width="100%" cellspacing="0" id="table2">
                     <thead>
                       <tr>
                         <th>Caretaker Name</th>
@@ -121,21 +126,22 @@
                         <th>Amount</th>
                         <th>Payment Method</th>
                         <th>Transfer To</th>
-                        <th>Transfer From</th>					
+                        <th>Transfer From</th>
+                        <th>Give Rating</th>
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                       <% for(var i=0; i<transaction.length; i++) { %>
                         <tr>
                           <td><%= transaction[i].name%></td>
                           <td><%= transaction[i].pet_name%></td>
                           <td><%= transaction[i].start_date%></td>
                           <td><%= transaction[i].end_date%></td>
-                          <td><%= transaction[i].amount%></td>		
-                          <td><%= transaction[i].payment_method%></td>	
-                          <td><%= transaction[i].method_to%></td>	
-                          <td><%= transaction[i].method_from%></td>	
-                          <td><button type="button" data-toggle="modal" data-target="#transactionModal" data-care_taker_email="<%= transaction[i].caretaker_email%>" data-caretaker_name="<%= transaction[i].name%>" data-petname="<%= transaction[i].pet_name%>" data-startdate="<%= transaction[i].start_date%>" data-rating_stars="<%= transaction[i].rating_stars%>" data-rating_comment="<%= transaction[i].rating_comment%>">Give Rating</button></td>									
+                          <td><%= transaction[i].amount%></td>
+                          <td><%= transaction[i].payment_method%></td>
+                          <td><%= transaction[i].method_to%></td>
+                          <td><%= transaction[i].method_from%></td>
+                          <td><button type="button" data-toggle="modal" data-target="#transactionModal" data-care_taker_email="<%= transaction[i].caretaker_email%>" data-caretaker_name="<%= transaction[i].name%>" data-petname="<%= transaction[i].pet_name%>" data-startdate="<%= transaction[i].start_date%>" data-rating_stars="<%= transaction[i].rating_stars%>" data-rating_comment="<%= transaction[i].rating_comment%>">Give Rating</button></td>
                         </tr>
                       <% } %>
                     </tbody>
@@ -146,7 +152,7 @@
       </div>
     </section>
     <!--================ Confirmed Transactions Area  =================-->
-    
+
   <div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -163,7 +169,7 @@
               <label for="caretaker_email" class="col-form-label">Caretaker Email</label>
               <input type="text" class="form-control" id="caretaker_email" name="caretaker_email" readonly>
             </div>
-        
+
             <div class="form-group">
               <label for="pet_owner_name" class="col-form-label">Pet Owner's Name</label>
               <input type="text" class="form-control" id="pet_owner_name" name="pet_owner_name" readonly>
@@ -191,15 +197,15 @@
 
             <div class="form-group">
               <label class="col-form-label">Date</label>
-        <input type="text" class="form-control" id="start_date"  name="start_date" readonly>             
+        <input type="text" class="form-control" id="start_date"  name="start_date" readonly>
         <input type="text" class="form-control" id="end_date"  name="end_date" readonly>
             </div>
-        
+
             <div class="form-group">
               <label for="amount" class="col-form-label">Amount</label>
               <input type="text" class="form-control" id="amount"  name="amount" readonly>
             </div>
-        
+
             <div class="form-group">
               <label for="payment_method" class="col-form-label">Payment Method</label>
         <select name="payment_method" id="payment_method" required>
@@ -208,16 +214,16 @@
                   <option value="Bank Transfer">Bank Transfer</option>
               </select>
             </div>
-        
+
         <div class="form-group">
               <label for="method_to" class="col-form-label">Method of Transfer To</label>
-        <select name="method_to" id="method_to" required> 
+        <select name="method_to" id="method_to" required>
                   <option value="Pet Owner deliver">Pet Owner deliver</option>
                   <option value="Care Taker pick up">Care Taker pick up</option>
                   <option value="Transfer through the physical building of PCS">Transfer through the physical building of PCS</option>
               </select>
             </div>
-        
+
         <div class="form-group">
               <label for="method_from" class="col-form-label">Method of Transfer From</label>
         <select name="method_from" id="method_from" required>
@@ -249,12 +255,12 @@
         </div>
                   <form action="/bids_list/rating" method="POST">
         <div class="modal-body">
-        
+
             <div class="form-group">
           <input type="text" class="form-control" id="petname"  name="petname" hidden>
         <input type="text" class="form-control" id="care_taker_email"  name="care_taker_email" hidden>
               <input type="text" class="form-control" id="startdate"  name="startdate" hidden>
-            </div> 
+            </div>
 
             <div class="form-group">
               <label for="rating_stars" class="col-form-label">Rating Stars</label>
@@ -266,11 +272,11 @@
                   <option value="5">5</option>
               </select>
             </div>
-        
+
         <div class="form-group">
               <label for="rating_comment" class="col-form-label">Rating Comments</label>
               <input type="text" class="form-control" id="rating_comment"  name="rating_comment" required>
-            </div>		 
+            </div>
 
         </div>
         <div class="modal-footer">
@@ -282,7 +288,7 @@
     </div>
   </div>
 
-  <!--================ start footer Area  =================-->	
+  <!--================ start footer Area  =================-->
   <footer class="footer-area section_gap">
     <div class="container">
     <div class="border_line"></div>
@@ -309,6 +315,20 @@
   <script src="js/stellar.js"></script>
   <script src="vendors/lightbox/simpleLightbox.min.js"></script>
   <script src="js/custom.js"></script>
+  <script src="js/jquery.dataTables.min.js"></script>
+  <script src="js/dataTables.bootstrap4.min.js"></script>
+
+      <script>
+      $(document).ready(function() {
+        $('#table1').DataTable();
+      } );
+    </script>
+
+    <script>
+    $(document).ready(function() {
+      $('#table2').DataTable();
+    } );
+  </script>
 
   </body>
 
@@ -318,7 +338,7 @@
   function confirm_details(name, id){
     alert(name);
   }
-  
+
   function convert(str) {
 	var date = new Date(str),
     mnth = ("0" + (date.getMonth() + 1)).slice(-2),
@@ -326,10 +346,10 @@
 	return [date.getFullYear(), mnth, day].join("-");
   }
 
-  // bids modal 
+  // bids modal
   $('#bidModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
-  var caretaker_email = button.data('caretaker_email'); 
+  var caretaker_email = button.data('caretaker_email');
   var pet_owner_name = button.data('pet_owner_name');
   var petowner_email = button.data('petowner_email');
   var pet_name = button.data('pet_name');
@@ -341,11 +361,11 @@
   var payment_method = button.data('payment_method');
   var method_to = button.data('method_to');
   var method_from = button.data('method_from');
-  
+
   var modal = $(this);
   modal.find('.modal-title').text('Confirm Transaction Details for ' + pet_owner_name);
 
-  $('#caretaker_email').val(caretaker_email) 
+  $('#caretaker_email').val(caretaker_email)
   $('#pet_owner_name').val(pet_owner_name)
   $('#petowner_email').val(petowner_email)
   $('#pet_name').val(pet_name)
@@ -354,16 +374,16 @@
   $('#start_date').val(convert(start_date))
   $('#end_date').val(convert(end_date))
   $('#amount').val(amount)
-  $('#payment_method').val(payment_method)  
-  $('#method_to').val(method_to)  
-  $('#method_from').val(method_from)  
-  
+  $('#payment_method').val(payment_method)
+  $('#method_to').val(method_to)
+  $('#method_from').val(method_from)
+
   })
-  
-  // transaction modal   
+
+  // transaction modal
   $('#transactionModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
-  var caretaker_name = button.data('caretaker_name'); 
+  var caretaker_name = button.data('caretaker_name');
   var care_taker_email = button.data('care_taker_email');
   var petname = button.data('petname');
   var startdate = button.data('startdate');
@@ -373,7 +393,7 @@
   var modal = $(this);
   modal.find('.modal-title').text('Enter Rating Details for ' + caretaker_name);
 
-  $('#caretaker_name').val(caretaker_name) 
+  $('#caretaker_name').val(caretaker_name)
   $('#care_taker_email').val(care_taker_email)
   $('#petname').val(petname)
   $('#startdate').val(convert(startdate))

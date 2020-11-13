@@ -104,7 +104,7 @@ app.get("/caretaker_home", checkNotAuthenticated, (req, res) => {
         pool.query(`SELECT * FROM full_time_takes_leave WHERE caretaker_email = $1`, [email],(err, data) => {
           let leave_data = data;
           res.render('caretaker_home', { title: 'Care Taker', caretaker_type: type, charge: charge_data.rows, all_category: all_category_data.rows, availability: availability_data.rows, user: req.user.name, leave: leave_data.rows});
-        })      
+        })
       });
     });
   });
@@ -115,7 +115,7 @@ app.get("/caretaker_search", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
 
     pool.query(`SELECT * FROM pets_own_by WHERE pet_owner_email = $1`,[email], (err, data) => {
-      let all_pet_data = data; 
+      let all_pet_data = data;
         res.render('caretaker_search', { title: 'Care Taker', errors: {}, all_pet: all_pet_data.rows, user: req.user.name});
 
     });
@@ -125,7 +125,7 @@ app.get("/caretaker_search", checkNotAuthenticated, (req, res) => {
 app.get("/bids_list", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
 
-    pool.query(`SELECT * FROM pet_owner_bids_for B INNER JOIN caretaker C ON  B.caretaker_email = C.email WHERE pet_owner_email = $1`,[email], (err, data) => {
+    pool.query(`SELECT * FROM pet_owner_bids_for B INNER JOIN caretaker C ON  B.caretaker_email = C.email WHERE pet_owner_email = $1 AND B.status != 2`,[email], (err, data) => {
       let all_bid_data = data;
 	  pool.query(`SELECT * FROM pets_taken_care_by T INNER JOIN caretaker C ON  T.caretaker_email = C.email WHERE pet_owner_email = $1`,[email], (err, data) => {
       let all_transaction_data = data;
@@ -405,7 +405,7 @@ app.post(
 
 app.post(
   "/pet_owner_home", async (req, res) => {
-    
+
       let email = req.user.email;
       let { name, requirement, category } = req.body;
       console.log({
@@ -684,7 +684,7 @@ app.post(
   "/caretaker_home/availability", async (req, res) => {
     let email = req.user.email;
     let {start_date, end_date} = req.body;
-    
+
     console.log({
 
       start_date,
@@ -785,8 +785,8 @@ app.post(
               }
               res.redirect("/caretaker_home");
             }
-          ) 
-          
+          )
+
         }
 
       );
@@ -855,7 +855,7 @@ app.post(
 
 // pet owner bids for a part-time caretaker
 app.post(
-  "/caretaker_list/bid", async (req, res) => {	 
+  "/caretaker_list/bid", async (req, res) => {
     let {petowner_email} = req.body;
     let {caretaker_email} = req.body;
     let {pet_name} = req.body;
@@ -912,13 +912,13 @@ app.post(
           // res.redirect("/pet_owner_home");
         }
       );
-    }    
+    }
   }
 )
 
 // pet owner books a full-time caretaker
 app.post(
-  "/caretaker_list/book", async (req, res) => {	 
+  "/caretaker_list/book", async (req, res) => {
     let {pet_owner_email} = req.body;
     let {care_taker_email} = req.body;
     let {petname} = req.body;
@@ -946,12 +946,12 @@ app.post(
         [pet_owner_email, care_taker_email, petname, startdate, enddate, amount],
 		(err, results) => {
 			if (err) {
-				throw err;					 
+				throw err;
 			}
 			console.log("result", results.rows);
 			if (results.rows.length > 0) {
 				req.flash(
-				"success_msg",						 
+				"success_msg",
 				"You successfully booked the caretaker"
 				);
 			} else {
@@ -960,18 +960,18 @@ app.post(
 				"Invalid bid selection. It has already been taken care."
 				)
 			}
-						 
+
 			pool.query(
 				`INSERT INTO pets_taken_care_by (pet_owner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from)
 				  VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 				  `,
 				[pet_owner_email, petname, care_taker_email, startdate, enddate, payment_method, amount, method_to, method_from],
 				(err, results) => {
-					res.redirect("/caretaker_search"); 
+					res.redirect("/caretaker_search");
 				}
 			  )
 		});
-    }    
+    }
   }
 )
 
@@ -980,7 +980,7 @@ app.post(
   "/caretaker_bids/accept", async (req, res) => {
     let {petowner_email} = req.body;
 	let {pet_name} = req.body;
-    let {caretaker_email} = req.body;    
+    let {caretaker_email} = req.body;
     let {start_date} = req.body;
     let {end_date} = req.body;
     let {amount} = req.body;
@@ -1019,7 +1019,7 @@ app.post(
   "/bids_list/confirm", async (req, res) => {
     let {petowner_email} = req.body;
 	let {pet_name} = req.body;
-    let {caretaker_email} = req.body;    
+    let {caretaker_email} = req.body;
     let {start_date} = req.body;
     let {end_date} = req.body;
 	let {payment_method} = req.body;
@@ -1032,23 +1032,23 @@ app.post(
     console.log("pint transaction confirmed", caretaker_email);
 
     if (errors.length > 0) {
-		pool.query(`SELECT * FROM pet_owner_bids_for NATURAL JOIN pets_own_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {			 
-			 let all_bid_data = data;			 
-			 pool.query(`SELECT * FROM pets_taken_care_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {
-				 let all_transaction_data = data;		
+		pool.query(`SELECT * FROM pet_owner_bids_for NATURAL JOIN pets_own_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {
+			 let all_bid_data = data;
+			 pool.query(`SELECT * FROM pets_taken_care_by NATURAL JOIN caretaker WHERE pet_owner_email = $1 `,[petowner_email], (err, data) => {
+				 let all_transaction_data = data;
 				 res.render('bids_list', { title: 'My Bids', data: all_bid_data.rows, transaction: all_transaction_data.rows, user: req.user.name});
 			});
 		});
     } else {
       pool.query(
-        `UPDATE pet_owner_bids_for SET status = 2 WHERE pet_owner_email = $1 AND caretaker_email = $3 AND pet_name = $2 AND startdate = $4 AND enddate = $5          
+        `UPDATE pet_owner_bids_for SET status = 2 WHERE pet_owner_email = $1 AND caretaker_email = $3 AND pet_name = $2 AND startdate = $4 AND enddate = $5
 		`,
 		[petowner_email, pet_name, caretaker_email, start_date, end_date],
-		(err, results) =>{			
+		(err, results) =>{
 		  pool.query(
 			`INSERT INTO pets_taken_care_by (pet_owner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from)
-				VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)		
-			`,       
+				VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+			`,
 			[petowner_email, pet_name, caretaker_email, start_date, end_date, payment_method, amount, method_to, method_from],
 			(err, results) => {
 			  if (err) {
@@ -1061,9 +1061,9 @@ app.post(
 			  );
 			  res.redirect("/pet_owner_home");
 			}
-		  )		  
+		  )
 		}
-	  );	  	      
+	  );
     }
 
   }
@@ -1074,8 +1074,8 @@ app.post(
   "/bids_list/rating", async (req, res) => {
 	let petowner_email = req.user.email;
 	let {petname} = req.body;
-    let {care_taker_email} = req.body; 
-	let {startdate} = req.body;	
+    let {care_taker_email} = req.body;
+	let {startdate} = req.body;
     let {rating_stars} = req.body;
 	let {rating_comment} = req.body;
 
@@ -1084,10 +1084,10 @@ app.post(
     console.log("pint rating confirmed", petowner_email, petname, care_taker_email, startdate, rating_stars, rating_comment);
 
     if (errors.length > 0) {
-		pool.query(`SELECT * FROM pet_owner_bids_for NATURAL JOIN pets_own_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {			 
-			 let all_bid_data = data;			 
+		pool.query(`SELECT * FROM pet_owner_bids_for NATURAL JOIN pets_own_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {
+			 let all_bid_data = data;
 			 pool.query(`SELECT * FROM pets_taken_care_by NATURAL JOIN caretaker WHERE pet_owner_email = $1`,[petowner_email], (err, data) => {
-				 let all_transaction_data = data;		
+				 let all_transaction_data = data;
 				 res.render('bids_list', { title: 'My Bids', data: all_bid_data.rows, transaction: all_transaction_data.rows, user: req.user.name});
 			});
 		});
@@ -1103,7 +1103,7 @@ app.post(
           console.log(results.rows);
           pool.query(
             `CALL caretaker_overall_rating($1, $2, $3)`,
-            [petowner_email, petname, care_taker_email], (err, results) => {	
+            [petowner_email, petname, care_taker_email], (err, results) => {
               if (err) {
                 throw err;
               }
@@ -1148,7 +1148,7 @@ app.post(
         month,
         email
       });
-    } else { 
+    } else {
       pool.query(
         `SELECT email, type FROM caretaker`,
         (err, results)=> {
@@ -1160,7 +1160,7 @@ app.post(
             caretakers, function(caretaker, callback){
               pool.query(
                 `SELECT amount, start_date, end_date FROM pets_taken_care_by ptcb
-                 WHERE ptcb.caretaker_email = $1 AND date_part('month', start_date) = $2 
+                 WHERE ptcb.caretaker_email = $1 AND date_part('month', start_date) = $2
                  AND date_part('year', start_date) = $3`,
                  [caretaker.email, month, year],
                  (err, results)=> {
@@ -1186,10 +1186,10 @@ app.post(
                       } else {
                         sum += (e_date - s_date + 1) * (transactions[i].amount * 0.8);
                       }
-                      
+
                     }
                     sum += 3000;
-                      
+
                   } else {
                     for (var i = 0; i < transactions.length; i++) {
                       let s_date = Date.parse(transactions[i].start_date) / (60*60*24*1000);
@@ -1197,7 +1197,7 @@ app.post(
                       sum += (e_date - s_date + 1) * (transactions[i].amount * 0.75);
                     }
                   }
-                  
+
                   pool.query(
                     `INSERT INTO caretaker_salaried_by VALUES ($1, $2, $3, $4, $5)`,
                     [caretaker.email,email, sum, year, month],

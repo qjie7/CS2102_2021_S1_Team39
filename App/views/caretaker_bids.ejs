@@ -14,9 +14,11 @@
     <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
     <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
     <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+    <link rel="stylesheet" href="css/dataTables.bootstrap4.min.css">
     <!-- main css -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+
   </head>
 
   <body>
@@ -34,11 +36,11 @@
               <!-- Collect the nav links, forms, and other content for toggling -->
               <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                   <ul class="nav navbar-nav menu_nav ml-auto">
-                      <li class="nav-item"><a class="nav-link" href="/caretaker_home">Home</a></li> 
+                      <li class="nav-item"><a class="nav-link" href="/caretaker_home">Home</a></li>
                       <li class="nav-item active"><a class="nav-link" href="/caretaker_bids">Accept Bid Requests</a></li>
                       <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
                   </ul>
-              </div> 
+              </div>
           </nav>
       </div>
     </header>
@@ -65,7 +67,7 @@
             <div class="card-body">
               <!-- DataTales Example -->
               <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="table1" width="100%" cellspacing="0">
                     <thead>
                         <tr>
                           <th>Pet Owner Name</th>
@@ -84,9 +86,11 @@
                             <td><%= data[i].startdate%></td>
                             <td><%= data[i].enddate%></td>
                             <td><%= data[i].amount%></td>
+                            <td>
                             <% if (data[i].status == 0) { %>
-                              <td><button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-bid_amount="<%= data[i].amount%>">Accept Bid</button></td>
+                              <button type="button"  data-toggle="modal" data-target="#bidModal" data-caretaker_email="<%= data[i].caretaker_email%>" data-pet_owner_name="<%= data[i].name%>" data-petowner_email="<%= data[i].pet_owner_email%>" data-pet_name="<%= data[i].pet_name%>" data-pet_category="<%= data[i].category_name%>" data-pet_requirements="<%= data[i].special_requirements%>" data-start_date="<%= data[i].startdate%>" data-end_date="<%= data[i].enddate%>" data-bid_amount="<%= data[i].amount%>">Accept Bid</button>
                             <% } %>
+                            </td>
                         </tr>
                       <% } %>
                     </tbody>
@@ -97,7 +101,7 @@
       </div>
     </section>
   <!--================ Bidding Area  =================-->
-    
+
     <div class="modal fade" id="bidModal" tabindex="-1" role="dialog" aria-labelledby="bidModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -115,7 +119,7 @@
                 <label for="caretaker_email" class="col-form-label">My Email</label>
                 <input type="text" class="form-control" id="caretaker_email" name="caretaker_email" readonly>
               </div>
-          
+
               <div class="form-group">
                 <label for="pet_owner_name" class="col-form-label">Pet Owner Name</label>
                 <input type="text" class="form-control" id="pet_owner_name" name="pet_owner_name" readonly>
@@ -143,10 +147,10 @@
 
               <div class="form-group">
                 <label class="col-form-label">Date</label>
-          <input type="text" class="form-control" id="start_date"  name="start_date" readonly>             
+          <input type="text" class="form-control" id="start_date"  name="start_date" readonly>
           <input type="text" class="form-control" id="end_date"  name="end_date" readonly>
               </div>
-          
+
               <div class="form-group">
                 <label for="bid_amount" class="col-form-label">Bid Amount</label>
                 <input type="text" class="form-control" id="bid_amount"  name="bid_amount" readonly>
@@ -160,9 +164,9 @@
                 </form>
         </div>
       </div>
-    </div>	
+    </div>
 
-    <!--================ start footer Area  =================-->	
+    <!--================ start footer Area  =================-->
     <footer class="footer-area section_gap">
       <div class="container">
       <div class="border_line"></div>
@@ -189,6 +193,13 @@
     <script src="js/stellar.js"></script>
     <script src="vendors/lightbox/simpleLightbox.min.js"></script>
     <script src="js/custom.js"></script>
+    <script src="js/jquery.dataTables.min.js"></script>
+    <script src="js/dataTables.bootstrap4.min.js"></script>
+    <script>
+    $(document).ready(function() {
+      $('#table1').DataTable();
+    } );
+  </script>
   </body>
 
 </html>
@@ -197,7 +208,7 @@
   function accept(name, id){
     alert(name);
   }
-  
+
   function convert(str) {
 	var date = new Date(str),
     mnth = ("0" + (date.getMonth() + 1)).slice(-2),
@@ -207,7 +218,7 @@
 
   $('#bidModal').on('show.bs.modal', function (event) {
   var button = $(event.relatedTarget); // Button that triggered the modal
-  var caretaker_email = button.data('caretaker_email'); 
+  var caretaker_email = button.data('caretaker_email');
   var pet_owner_name = button.data('pet_owner_name');
   var petowner_email = button.data('petowner_email');
   var pet_name = button.data('pet_name');
@@ -216,13 +227,13 @@
   var start_date = button.data('start_date');
   var end_date = button.data('end_date');
   var bid_amount = button.data('bid_amount');
-  
+
   var caretaker_email = button.data('caretaker_email'); // additional data to be filled in pets_taken_care_by table
 
   var modal = $(this);
   modal.find('.modal-title').text('Accept Bid from ' + pet_owner_name);
 
-  $('#caretaker_email').val(caretaker_email) 
+  $('#caretaker_email').val(caretaker_email)
 
   $('#pet_owner_name').val(pet_owner_name)
   $('#petowner_email').val(petowner_email)
@@ -231,7 +242,7 @@
   $('#pet_requirements').val(pet_requirements)
   $('#start_date').val(convert(start_date))
   $('#end_date').val(convert(end_date))
-  $('#bid_amount').val(bid_amount)  
-  
+  $('#bid_amount').val(bid_amount)
+
   })
 </script>
