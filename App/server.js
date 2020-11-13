@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
+module.exports.bcrypt = bcrypt;
 const session = require("express-session");
 const flash = require("express-flash");
 const async = require("async");
