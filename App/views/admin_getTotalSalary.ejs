@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <link rel="icon" href="image/favicon.png" type="image/png">
+        <title>Pet Care Home</title>
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="css/bootstrap.css">
+        <link rel="stylesheet" href="vendors/linericon/style.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+        <link rel="stylesheet" href="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.css">
+        <link rel="stylesheet" href="vendors/nice-select/css/nice-select.css">
+        <link rel="stylesheet" href="vendors/owl-carousel/owl.carousel.min.css">
+        <!-- main css -->
+        <link rel="stylesheet" href="css/style.css">
+        <link rel="stylesheet" href="css/responsive.css">
+    </head>
+
+
+    <body>
+        <!--================Header Area =================-->
+        <header class="header_area">
+            <div class="container">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <a class="navbar-brand logo_h" href="/"><img src="image/Logo.png" alt=""></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav menu_nav ml-auto">
+                            <li class="nav-item active"><a class="nav-link" href="/admin_home">Home</a></li> 
+                            <li class="nav-item active"><a class="nav-link" href="/admin_getTotalSalary">Get Total Salary</a></li> 
+                            <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
+                        </ul>
+                    </div> 
+                </nav>
+            </div>
+        </header>
+        <!--================Header Area =================-->
+
+        <!--================Breadcrumb Area =================-->
+        <section class="breadcrumb_area">
+            <div class="overlay bg-parallax" data-stellar-ratio="0.8" data-stellar-vertical-offset="0" data-background=""></div>
+            <div class="container">
+                <div class="page-cover text-center">
+                    <h2 class="page-cover-tittle">Hello <%= user.charAt(0).toUpperCase() + user.slice(1) %> </h2>
+                </div>
+            </div>
+        </section>
+        <!--================Breadcrumb Area =================-->
+
+       
+
+        <!--================ Salary Area  =================-->
+        <section class="testimonial_area section_gap">
+            <div class="container">
+                <div class="section_title text-center">
+                    <h2 class="title_color">Get Total Salary</h2>
+                </div>
+                <div class="card shadow mb-4">
+
+                    <form action="/admin_getTotalSalary" method="POST">
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="year">Year</label>
+                                <input class="form-control" type="number" id="year" name="year" required>
+                            </div>
+                            <div class="form-group col">
+                                <label for="month">Month</label>
+                                <input class="form-control" type="number" id="month" name="month" min=1 max=12 required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <input class="btn btn-primary" type="submit" value="Check Total Salary" />
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- DataTales Example -->
+
+                </div>
+            </div>
+        </section>
+        <!--================ Salary Area  =================-->
+
+
+        <!-- Logout Modal-->
+        <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                        <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-primary" href="/logout">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+        <!--================ start footer Area  =================-->	
+        <footer class="footer-area section_gap">
+            <div class="container">
+            <div class="border_line"></div>
+            <div class="row footer-bottom d-flex justify-content-between align-items-center">
+                <p class="col-lg-8 col-sm-12 footer-text m-0"><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+        Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+        <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></p>
+            </div>
+            </div>
+        </footer>
+        <!--================ End footer Area  =================-->
+
+        <!-- Optional JavaScript -->
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="js/jquery-3.2.1.min.js"></script>
+        <script src="js/popper.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="vendors/owl-carousel/owl.carousel.min.js"></script>
+        <script src="js/jquery.ajaxchimp.min.js"></script>
+        <script src="js/mail-script.js"></script>
+        <script src="vendors/bootstrap-datepicker/bootstrap-datetimepicker.min.js"></script>
+        <script src="vendors/nice-select/js/jquery.nice-select.js"></script>
+        <script src="js/mail-script.js"></script>
+        <script src="js/stellar.js"></script>
+        <script src="vendors/lightbox/simpleLightbox.min.js"></script>
+        <script src="js/custom.js"></script>
+    </body>
+
+</html>

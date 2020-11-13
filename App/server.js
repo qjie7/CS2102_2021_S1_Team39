@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const session = require("express-session");
 const flash = require("express-flash");
 const async = require("async");
+const cors = require("cors");
 
 const { pool } = require("./dbConfig");
 
@@ -31,6 +32,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(cors());
 
 /* ------------ GET ------------ */
 
@@ -74,8 +76,14 @@ app.get("/admin_home", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
   pool.query(`SELECT * FROM pet_category`, (err, data) => {
     let all_category_data = data;
-		res.render('admin_home', { title: 'Admin Home', all_category: all_category_data.rows, user: req.user.name});
+    
+		res.render('admin_home', {totalSalary: "", title: 'Admin Home', all_category: all_category_data.rows, user: req.user.name});
 	});
+});
+
+// Admin Home
+app.get("/admin_getTotalSalary", checkNotAuthenticated, (req, res) => {
+  res.render("admin_getTotalSalary", {user: req.user.name});
 });
 
 // Pet Owner Home
@@ -139,7 +147,7 @@ app.get("/bids_list", checkNotAuthenticated, (req, res) => {
 app.get("/caretaker_bids", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
 
-    pool.query(`SELECT * FROM pet_owner_bids_for NATURAL JOIN pets_own_by NATURAL JOIN pet_owner WHERE caretaker_email = $1`,[email], (err, data) => {
+    pool.query(`SELECT * FROM pet_owner_bids_for pobs INNER JOIN pet_owner po ON pobs.pet_owner_email = po.email WHERE caretaker_email = $1`,[email], (err, data) => {
       let all_bid_request_data = data;
         res.render('caretaker_bids', { title: 'My Bid Requests', data: all_bid_request_data.rows, user: req.user.name});
 
@@ -838,7 +846,7 @@ app.post(
 
                   pool.query(
                              `SELECT * FROM (caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email)
-                              WHERE c.type = 'full_time' AND cc.category_name = $1 AND c.email NOT IN
+                              INNER JOIN caretaker_has_availability cha ON c.email= cha.caretaker_email WHERE c.type = 'full_time' AND cha.start_date <= $2 AND cha.end_date >= $3 AND cc.category_name = $1 AND c.email NOT IN
                              (SELECT DISTINCT c.email
                               FROM ((caretaker c INNER JOIN caretaker_has_charge cc ON c.email = cc.caretaker_email)
                               INNER JOIN full_time_takes_leave ft ON c.email = ft.caretaker_email)
@@ -850,6 +858,76 @@ app.post(
       });
       });
     }
+  }
+)
+
+app.post(
+  "/admin_getTotalSalary", async (req, res) => {
+    let {year} = req.body;
+    let {month} = req.body;
+    //let email = req.user.email;
+    console.log({
+      year,
+      month
+     // email
+    });
+
+    let errors = [];
+
+    if (!year) {
+      errors.push({ message: "Please enter the year" });
+    }
+    if (!month) {
+      errors.push({ message: "Please enter the month" });
+    }
+
+    if (errors.length > 0) {
+      res.render("admin_home", {
+        year,
+        month
+       // email
+      });
+    } else {
+
+      pool.query(
+        `SELECT SUM(amount) FROM caretaker_salaried_by WHERE year = $1 AND month = $2`,
+         [year,month], (err, data) => {
+         let sum = data;
+         console.log(sum);
+
+
+         res.render('admin_totalSalary', { title: 'Admin Home', user: req.user.name, totalSalary: sum.rows});
+
+});
+
+
+ 
+      // pool.query(
+      //   `SELECT SUM(amount) FROM caretaker_salaried_by WHERE year = $1 AND month = $2`,
+      //   [year, month],
+      //   (err, results)=> {
+      //     // console.log("salary total == ", results);
+
+          
+
+      //     // if (err) {
+      //     //   throw err;
+      //     // }
+      //     let totalSalary = results;
+
+      //     pool.query(`SELECT * FROM pet_category`, (err, data) => {
+      //       let all_category_data = data;
+      //       console.log(totalSalary);
+      //       res.render('admin_home', {title: 'Admin Home', all_category: all_category_data.rows, user: req.user.name, totalSalary: totalSalary.rows.sum});
+      //     });
+      //   }
+      // );
+    }
+    // req.flash(
+    //   "success_msg",
+    //   "Successfully inserted caretaker salary "
+    // );
+    //res.redirect("/admin_home");
   }
 )
 
@@ -990,7 +1068,7 @@ app.post(
     console.log("pint bid accepted", caretaker_email);
 
     if (errors.length > 0) {
-		pool.query(`SELECT * FROM pet_owner_bids_for NATURAL JOIN pets_own_by NATURAL JOIN pet_owner WHERE caretaker_email = $1`,[caretaker_email], (err, data) => {
+		pool.query(`SELECT * FROM pet_owner_bids_for pobs INNER JOIN pet_owner po ON pobs.pet_owner_email = po.email WHERE caretaker_email = $1`,[caretaker_email], (err, data) => {
 			let all_bid_request_data = data;
 			res.render('caretaker_bids', { title: 'My Bid Requests', data: all_bid_request_data.rows, user: req.user.name});
 		});

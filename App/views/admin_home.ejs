@@ -36,6 +36,7 @@
                     <div class="collapse navbar-collapse offset" id="navbarSupportedContent">
                         <ul class="nav navbar-nav menu_nav ml-auto">
                             <li class="nav-item active"><a class="nav-link" href="/admin_home">Home</a></li> 
+                            <li class="nav-item active"><a class="nav-link" href="/admin_getTotalSalary">Get Total Salary</a></li> 
                             <li class="nav-item"><a class="nav-link" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a></li>
                         </ul>
                     </div> 
@@ -136,6 +137,8 @@
                 </div>
             </div>
         </section>
+
+
         <!--================ Salary Area  =================-->
 
         <!-- Add Category Modal-->
@@ -170,33 +173,6 @@
             </div>
         </form>
 
-                <!-- Delete Category Modal
-                <form action="/admin_home/deleteCategory" method="POST">
-                    <div class="modal fade" id="deleteCategoryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                        aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Delete a category?</h5>
-                                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col">
-                                            <input class="form-control" type="text" id="category_name" name="category_name"
-                                                placeholder="Category" required />
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <input class="btn btn-primary" type="submit" value="Delete Category" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </form> -->
 
         <!-- Logout Modal-->
         <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
