@@ -90,6 +90,7 @@ app.get("/pet_owner_home", checkNotAuthenticated, (req, res) => {
 	});
 });
 
+
 // Care Taker Home
 app.get("/caretaker_home", checkNotAuthenticated, (req, res) => {
   let email = req.user.email;
@@ -459,9 +460,8 @@ app.post(
     }
     if (errors.length > 0) {
       let pet_name = req.body.delete;
-      res.render("pet_owner_home", {
-        pet_name
-      });
+      res.redirect("/pet_owner_home");
+      
     } else {
         pool.query(
         `DELETE FROM pets_own_by WHERE pet_owner_email = $1 and pet_name = $2`,

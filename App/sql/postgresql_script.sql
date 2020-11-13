@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS caretaker_has_availability (
 	start_date DATE,
 	end_date DATE,
 	PRIMARY KEY (caretaker_email, start_date, end_date),
-    CHECK(start_date <= end_date)
+    CHECK(start_date <= end_date),
+    EXCLUDE USING gist (daterange(start_date, end_date) WITH &&)
 );
 
 CREATE TABLE IF NOT EXISTS caretaker_has_charge (
@@ -142,6 +143,25 @@ CREATE TRIGGER
 check_fulltime_availability
 BEFORE INSERT OR UPDATE ON caretaker_has_availability
 FOR EACH ROW EXECUTE PROCEDURE caretaker_availability();
+
+CREATE OR REPLACE FUNCTION
+caretaker_overlap_availability() RETURNS TRIGGER AS
+$$ DECLARE ct NUMERIC;
+    BEGIN 
+        SELECT COUNT(*) INTO ct FROM caretaker_has_availability C
+        WHERE NEW.caretaker_email = C.caretaker_email AND ( (NEW.start_date >= C.start_date AND NEW.end_date <= C.end_date) OR (NEW.start_date <= C.start_date AND NEW.end_date <= C.end_date) OR (NEW.start_date >= C.start_date AND NEW.end_date >= C.end_date)   );
+        IF ct > 0 THEN 
+            RETURN NULL;
+        ELSE 
+            RETURN NEW;  
+        END IF;
+        END; $$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER
+check_overlap_availability
+BEFORE INSERT OR UPDATE ON caretaker_has_availability
+FOR EACH ROW EXECUTE PROCEDURE caretaker_overlap_availability();
 
 CREATE OR REPLACE PROCEDURE caretaker_charge(input_email VARCHAR, input_category VARCHAR, input_charge NUMERIC) as
 $$ DECLARE 
